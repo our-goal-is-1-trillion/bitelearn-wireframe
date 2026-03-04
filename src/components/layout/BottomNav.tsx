@@ -1,10 +1,10 @@
 import type { DashboardTab } from "@/components/features/dashboard/dashboard.types"
 
-type DashboardBottomNavProps = {
+type BottomNavProps = {
   tabs: DashboardTab[]
 }
 
-export default function DashboardBottomNav({ tabs }: DashboardBottomNavProps) {
+export default function BottomNav({ tabs }: BottomNavProps) {
   return (
     <nav className="absolute inset-x-3 bottom-3 z-20 rounded-full border border-slate-300 bg-white p-3 shadow-sm">
       <ul className="grid grid-cols-5 gap-1">

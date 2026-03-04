@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import ChoiceQuestion from "./components/features/choiceQuestion/ChoiceQuestion"
+import ChoiceQuestionBottomSheet from "./components/features/choiceQuestionBottomSheet/ChoiceQuestion"
 import Home from "./components/features/home/Home"
 import Dashboard from "./components/features/dashboard/Dashboard"
 import Result from "./components/features/result/Result"
 
-type Page = "home" | "choiceQuestion" | "quiz" | "result" | "dashBoard"
+type Page = "home" | "choiceQuestion" | "choiceQuestionBottomSheet" | "quiz" | "result" | "dashBoard"
 type TransitionStage = "idle" | "out" | "in"
 
 export default function App() {
@@ -46,6 +47,8 @@ export default function App() {
     switch (page) {
       case "choiceQuestion":
         return <ChoiceQuestion onComplete={() => handleNavigate("result")} />
+      case "choiceQuestionBottomSheet":
+        return <ChoiceQuestionBottomSheet onComplete={() => handleNavigate("result")} />
       case "result":
         return <Result />
       case "dashBoard":

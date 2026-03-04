@@ -1,4 +1,4 @@
-import DashboardBottomNav from "@/components/layout/DashboardBottomNav"
+import BottomNav from "@/components/layout/BottomNav"
 import DashboardCategoryList from "./DashboardCategoryList"
 import DashboardContinueCard from "./DashboardContinueCard"
 import DashboardHeader from "./DashboardHeader"
@@ -30,7 +30,7 @@ export default function DashboardHome({
           </div>
         </section>
 
-        <DashboardBottomNav tabs={tabs} />
+        <BottomNav tabs={tabs} />
       </div>
     </main>
   )
