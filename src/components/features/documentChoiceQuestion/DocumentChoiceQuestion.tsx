@@ -116,34 +116,6 @@ export default function DocumentChoiceQuestion({ onComplete }: DocumentChoiceQue
         )
       case "choices":
       case "checking":
-        if (choiceMode === "document_select") {
-          return (
-            <>
-              <ChoiceQuestionPassage
-                passage={currentQuestion.passage}
-                flavorText={currentQuestion.flavorText}
-                passageMode="document"
-                documentCard={currentQuestion.documentCard}
-                choiceMode={choiceMode}
-                selectedValue={selectedChoice}
-                onSelectDocumentField={setSelectedChoice}
-                isChecking={phase === "checking"}
-                correctIndex={currentQuestion.correctIndex}
-                onSolve={() => {}}
-                hideSolveButton
-              />
-              <QuizFooter
-                disabled={selectedChoice === "" || phase === "checking"}
-                previousDisabled={phase === "checking"}
-                onClick={handleCheckAnswer}
-                onPrevious={() => setPhase("passage")}
-              >
-                정답 확인
-              </QuizFooter>
-            </>
-          )
-        }
-
         if (choiceMode === "ox") {
           return (
             <ChoiceQuestionOXChoices
@@ -180,8 +152,8 @@ export default function DocumentChoiceQuestion({ onComplete }: DocumentChoiceQue
             explanation={currentQuestion.explanation}
             characterImageUrl={
               isCorrect
-                ? currentQuestion.characterCorrectImageUrl
-                : currentQuestion.characterIncorrectImageUrl
+                ? (currentQuestion.characterCorrectImageUrl || "/images/result/dog_perfect.png")
+                : (currentQuestion.characterIncorrectImageUrl || "/images/result/dog_fail.png")
             }
             isLastQuestion={isLastQuestion}
             onNext={handleNextQuestion}
@@ -201,12 +173,9 @@ export default function DocumentChoiceQuestion({ onComplete }: DocumentChoiceQue
         </div>
 
         {phase !== "result" && (
-          <>
+          <div className="px-6 py-2">
             <ChoiceQuestionIndicator steps={indicatorSteps} />
-            {currentQuestion.imageUrl ? (
-              <ChoiceQuestionImage src={currentQuestion.imageUrl} alt={currentQuestion.imageAlt} />
-            ) : null}
-          </>
+          </div>
         )}
 
         {renderPhaseContent()}

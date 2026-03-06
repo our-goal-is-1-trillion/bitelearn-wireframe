@@ -1,4 +1,5 @@
 import QuizFooter from "@/components/layout/QuizFooter"
+import QuestionPassage from "@/components/common/QuestionPassage"
 
 type ChoiceQuestionPassageProps = {
   /** 지문 텍스트 */
@@ -31,15 +32,12 @@ export default function ChoiceQuestionPassage({
 }: ChoiceQuestionPassageProps) {
   return (
     <>
-      {/* 스크롤 가능한 콘텐츠 영역: data-mode 속성에 passageMode를 남겨 첨부 확장 시 CSS 분기 시 활용 */}
-      <section className="flex-1 overflow-y-auto px-6" data-mode={passageMode}>
-        {/* 지문 카드 */}
-        <div className="rounded-md border border-slate-300 bg-white px-4 py-4">
-          <p className="text-sm leading-relaxed text-slate-900">{passage}</p>
-        </div>
-
-        {/* 플레이버 텍스트 */}
-        <p className="mt-6 text-sm text-black">{flavorText}</p>
+      {/* 스크롤 가능한 콘텐츠 영역 */}
+      <section className="flex-1 overflow-y-auto px-6 py-4" data-mode={passageMode}>
+        <QuestionPassage
+          passage={passage}
+          flavorText={flavorText}
+        />
       </section>
 
       {/* Footer — "문제 풀기" CTA (숨김 처리되지 않았을 때만 렌더링) */}

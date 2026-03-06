@@ -1,8 +1,11 @@
 import { cn } from "@/lib/utils"
 
 export type StepIndicatorInfo = {
+  /** word: 단어장, learning: 내용학습, quiz: 문제풀이 */
   type: "word" | "learning" | "quiz"
+  /** 현재 해결 상태 */
   status: "none" | "correct" | "incorrect"
+  /** 현재 위치 여부 */
   isCurrent: boolean
 }
 
@@ -10,26 +13,35 @@ type ChoiceQuestionIndicatorProps = {
   steps: StepIndicatorInfo[]
 }
 
-/** 퀴즈 진행도를 표시하는 Dot 인디케이터 */
+/** 
+ * 퀴즈/학습 진행도를 표시하는 Dot 인디케이터 
+ * 필수적인 시멘틱 컬러(정답/오답/학습)를 사용하여 직관적인 피드백을 제공합니다.
+ */
 export default function ChoiceQuestionIndicator({
   steps,
 }: ChoiceQuestionIndicatorProps) {
   return (
-    <div className="flex items-center justify-center gap-2 px-6 pt-6">
+    <div className="flex items-center justify-center gap-2.5 px-6 py-4">
       {steps.map((step, index) => {
-        let bgColor = "bg-slate-300" // 퀴즈 미해결 (기본 옅은 회색)
+        // 1. 기본 색상 결정 (타입 및 상태 기준)
+        let bgColor = "bg-slate-200" // 미진행
 
-        if (step.type === "learning") {
-          bgColor = "bg-blue-500" // 학습: 파란색
+        if (step.type === "word" || step.type === "learning") {
+          bgColor = "bg-blue-500" // 학습 단계: 파란색
         } else if (step.type === "quiz") {
           if (step.status === "correct") {
-            bgColor = "bg-green-500" // 정답: 녹색
+            bgColor = "bg-emerald-500" // 정답: 녹색
           } else if (step.status === "incorrect") {
-            bgColor = "bg-red-500" // 오답: 빨간색
+            bgColor = "bg-rose-500" // 오답: 빨간색
+          } else if (step.isCurrent) {
+            bgColor = "bg-slate-400" // 현재 풀고 있는 문제 (아직 미제출)
           }
         }
 
-        const sizeClass = step.isCurrent ? "w-2.5 h-2.5" : "w-1.5 h-1.5"
+        // 2. 현재 위치 강조 스타일 (Lo-fi detail)
+        const currentClass = step.isCurrent 
+          ? "w-2 h-2 ring-4 ring-slate-100 shadow-sm" 
+          : "w-1.5 h-1.5 opacity-60"
 
         return (
           <div
@@ -37,7 +49,7 @@ export default function ChoiceQuestionIndicator({
             className={cn(
               "rounded-full transition-all duration-300",
               bgColor,
-              sizeClass
+              currentClass
             )}
           />
         )

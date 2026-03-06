@@ -8,14 +8,14 @@ import type { Chapter } from "@/data/mock/chapter"
 
 type ChapterListProps = {
   onBack: () => void
-  initialCategoryId?: string
   onSelectChapter: (chapterId: string) => void
+  onTabClick?: (label: string) => void
 }
 
 const LEARNING_TABS = [
   { label: "홈", icon: House, active: false },
   { label: "학습", icon: GraduationCap, active: true },
-  { label: "오답노트", icon: BookOpenCheck, active: false },
+  { label: "노트", icon: BookOpenCheck, active: false },
   { label: "아티클", icon: FileText, active: false },
   { label: "마이", icon: UserRound, active: false },
 ]
@@ -88,17 +88,17 @@ function StageNode({
 }
 
 // ─── Main component ────────────────────────────────────────────
-export default function ChapterList({ onBack, initialCategoryId = "real-estate", onSelectChapter }: ChapterListProps) {
-  const [selectedCategoryId, setSelectedCategoryId] = useState(initialCategoryId)
+export default function ChapterList({ onBack, onSelectChapter, onTabClick }: ChapterListProps) {
+  const [selectedCategoryId, setSelectedCategoryId] = useState("real-estate")
 
   const category = MOCK_CATEGORY_CHAPTERS.find((c) => c.categoryId === selectedCategoryId)!
   const progressPercent = Math.round((category.completedChapters / category.totalChapters) * 100)
 
   return (
-    <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900">
-      <div className="relative flex h-full flex-col border border-slate-200">
+    <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900 flex flex-col border border-slate-200">
+      <div className="relative flex h-full flex-col">
 
-        <div className="absolute inset-x-0 top-0 z-20 bg-white border-b border-slate-100">
+        <div className="shrink-0 bg-white border-b border-slate-100">
           <div className="flex h-14 items-center px-4">
             <Button
               variant="ghost"
@@ -121,7 +121,7 @@ export default function ChapterList({ onBack, initialCategoryId = "real-estate",
                 className={`h-9 whitespace-nowrap rounded-full px-4 text-xs font-bold transition-all ${
                   selectedCategoryId === cat.categoryId
                     ? "bg-slate-900 text-white"
-                    : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                    : "bg-slate-100 text-slate-500 hover:bg-slate-200 border-none"
                 }`}
               >
                 {cat.emoji} {cat.categoryName}
@@ -130,7 +130,7 @@ export default function ChapterList({ onBack, initialCategoryId = "real-estate",
           </div>
         </div>
 
-        <section className="hide-scrollbar flex-1 overflow-y-auto px-6 pb-32 pt-40">
+        <section className="hide-scrollbar flex-1 overflow-y-auto px-6 pb-32 pt-10">
           
           <div className="mb-14 rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
             <div className="flex items-end justify-between mb-3">
@@ -170,7 +170,7 @@ export default function ChapterList({ onBack, initialCategoryId = "real-estate",
           </div>
         </section>
 
-        <DashboardBottomNav tabs={LEARNING_TABS} />
+        <DashboardBottomNav tabs={LEARNING_TABS} onTabClick={onTabClick} />
       </div>
     </main>
   )

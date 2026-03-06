@@ -2,9 +2,10 @@ import type { DashboardTab } from "@/components/features/dashboard/dashboard.typ
 
 type DashboardBottomNavProps = {
   tabs: DashboardTab[]
+  onTabClick?: (label: string) => void
 }
 
-export default function DashboardBottomNav({ tabs }: DashboardBottomNavProps) {
+export default function DashboardBottomNav({ tabs, onTabClick }: DashboardBottomNavProps) {
   return (
     <div className="absolute inset-x-0 bottom-0 z-30">
       {/* Subtle blur background for safe area */}
@@ -18,6 +19,7 @@ export default function DashboardBottomNav({ tabs }: DashboardBottomNavProps) {
               <li key={tab.label} className="flex-1">
                 <button
                   type="button"
+                  onClick={() => onTabClick?.(tab.label)}
                   className={`flex w-full flex-col items-center justify-center gap-1.5 rounded-[24px] py-3.5 transition-all active:scale-95 ${
                     tab.active 
                       ? "bg-slate-900 text-white shadow-md shadow-slate-400/20" 

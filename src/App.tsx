@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import Home from "@/components/features/home/Home"
 import DashboardHome from "@/components/features/dashboard/DashboardHome"
@@ -24,9 +24,10 @@ import Login from "@/pages/Login"
 import Signup from "@/pages/Signup"
 import Mypage from "@/pages/Mypage"
 import ArticleDetail from "@/components/features/article/ArticleDetail"
+import ArticleList from "@/components/features/article/ArticleList"
 import { MOCK_CHOICE_QUESTION_SET } from "@/data/mock/choiceQuestion"
 import ChapterList from "@/components/features/chapter/ChapterList"
-import MistakeNote from "@/pages/MistakeNote"
+import LearningNote from "@/pages/LearningNote"
 import LearningHome from "@/components/features/chapter/LearningHome"
 
 export type QuizResultData = {
@@ -53,6 +54,7 @@ export type Page =
   | "dashBoard"
   | "wordLearning"
   | "article"
+  | "articleList"
   | "login"
   | "signup"
   | "mypage"
@@ -93,6 +95,17 @@ export default function App() {
     setTransitionStage("out")
   }
 
+  const handleTabClick = (label: string) => {
+    switch (label) {
+      case "홈": handleNavigate("dashBoard"); break;
+      case "학습": handleNavigate("learningHome"); break;
+      case "노트": handleNavigate("mistakeNote"); break;
+      case "아티클": handleNavigate("articleList"); break;
+      case "마이": handleNavigate("mypage"); break;
+      default: break;
+    }
+  }
+
   const handleCompleteQuiz = (total: number, correct: number) => {
     setQuizResult({ total, correct, timeSpent: 125 })
     handleNavigate("result")
@@ -118,8 +131,16 @@ export default function App() {
           />
         )
 
+      case "articleList":
+        return (
+          <ArticleList
+            onSelectArticle={() => handleNavigate("article")}
+            onTabClick={handleTabClick}
+          />
+        )
+
       case "article":
-        return <ArticleDetail onBack={() => handleNavigate("home")} />
+        return <ArticleDetail onBack={() => handleNavigate("articleList")} />
 
       case "choiceQuestion":
       case "choiceQuestionBottomSheet":
@@ -189,11 +210,12 @@ export default function App() {
       case "dashBoard":
         return (
           <DashboardHome
-            tabs={DASHBOARD_TABS}
+            tabs={DASHBOARD_TABS.map(t => ({ ...t, active: t.label === "홈" }))}
             categories={DASHBOARD_CATEGORIES}
             recommendations={DASHBOARD_TODAY_RECOMMENDATIONS}
-            onMoveToChapter={() => handleNavigate("home")}
+            onMoveToChapter={() => handleNavigate("learningHome")}
             onMoveToLogin={() => handleNavigate("login")}
+            onTabClick={handleTabClick}
             headerTitle="BiteLearn"
             headerSubtitle="로그인하고 맞춤 학습을 시작해보세요."
             continueHeadline="학습이 처음인 당신을 위해"
@@ -229,6 +251,7 @@ export default function App() {
               setSelectedCategoryId(id)
               handleNavigate("chapterList")
             }}
+            onTabClick={handleTabClick}
           />
         )
 
@@ -238,11 +261,12 @@ export default function App() {
             initialCategoryId={selectedCategoryId}
             onBack={() => handleNavigate("learningHome")}
             onSelectChapter={() => handleNavigate("home")}
+            onTabClick={handleTabClick}
           />
         )
 
       case "mistakeNote":
-        return <MistakeNote />
+        return <LearningNote onTabClick={handleTabClick} />
 
       default:
         return <Home onNavigate={handleNavigate} />

@@ -1,5 +1,6 @@
-﻿import { useState } from "react"
+import { useState } from "react"
 import OnboardingModal from "@/components/features/onboarding/OnboardingModal"
+import { ChevronRight, Folder, FileText, PlayCircle } from "lucide-react"
 
 export type Page =
   | "home"
@@ -17,6 +18,7 @@ export type Page =
   | "resultFail"
   | "wordLearning"
   | "article"
+  | "articleList"
   | "documentChoiceQuestion"
   | "documentClickQuestion"
   | "login"
@@ -28,207 +30,210 @@ export type Page =
 
 type IAAction = "onboarding"
 
-type IAItem = {
+interface IANode {
   label: string
   page?: Page
   action?: IAAction
+  children?: IANode[]
 }
 
-type IATab = {
-  id: number
-  title: string
-  emoji: string
-  colorClass: {
-    bg: string
-    border: string
-    header: string
-    badge: string
-    itemHover: string
-    itemBorder: string
+const IA_STRUCTURE: IANode[] = [
+  {
+    label: "Onboarding Flow",
+    children: [
+      { label: "서비스 온보딩 모달", action: "onboarding" },
+      { label: "로그인", page: "login" },
+      { label: "회원가입", page: "signup" },
+    ]
+  },
+  {
+    label: "Main Dashboard (Tab 1)",
+    children: [
+      { 
+        label: "홈 대시보드", 
+        page: "dashBoard",
+        children: [
+          { label: "오늘의 추천 학습", page: "dashBoard" },
+          { label: "지식 보관함 (카테고리)", page: "dashBoard" },
+        ]
+      }
+    ]
+  },
+  {
+    label: "Learning Path (Tab 2)",
+    children: [
+      { 
+        label: "학습 도메인 목록 (Depth 1)", 
+        page: "learningHome",
+        children: [
+          { 
+            label: "챕터 목록 (Depth 2 · 로드맵)", 
+            page: "chapterList",
+            children: [
+              { label: "단어 학습 카드", page: "wordLearning" },
+              { 
+                label: "퀴즈 풀이 (Depth 3)",
+                children: [
+                  { label: "지문형 객관식 (A/B/C)", page: "choiceQuestion" },
+                  { label: "지문형 OX (A/B/C)", page: "oxQuestion" },
+                  { label: "대화형 객관식", page: "conversationQuestion" },
+                  { label: "문서형 객관식", page: "documentChoiceQuestion" },
+                  { label: "문서 클릭 퀴즈", page: "documentClickQuestion" },
+                ]
+              },
+              { 
+                label: "학습 결과 (Depth 3)", 
+                children: [
+                  { label: "완벽 방어 (80%↑)", page: "resultPerfect" },
+                  { label: "아슬아슬 (40~79%)", page: "resultClose" },
+                  { label: "방어 실패 (40%↓)", page: "resultFail" },
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "Knowledge Note (Tab 3)",
+    children: [
+      { 
+        label: "나의 학습 노트 (통합)", 
+        page: "mistakeNote",
+        children: [
+          { label: "오답 복습 리스트", page: "mistakeNote" },
+          { label: "저장한 아티클 모음", page: "mistakeNote" },
+          { label: "학습 히스토리", page: "mistakeNote" },
+        ]
+      }
+    ]
+  },
+  {
+    label: "Curated Articles (Tab 4)",
+    children: [
+      { 
+        label: "아티클 목록 페이지", 
+        page: "articleList",
+        children: [
+          { label: "아티클 상세 페이지", page: "article" },
+        ]
+      }
+    ]
+  },
+  {
+    label: "My Page (Tab 5)",
+    children: [
+      { 
+        label: "마이페이지 홈", 
+        page: "mypage",
+        children: [
+          { label: "계정 정보 관리", page: "mypage" },
+          { label: "학습 설정", page: "mypage" },
+        ]
+      }
+    ]
   }
-  items: IAItem[]
-}
-
-const IA_TABS: IATab[] = [
-  {
-    id: 1,
-    title: "홈 (Home)",
-    emoji: "🏠",
-    colorClass: {
-      bg: "bg-red-50",
-      border: "border-red-200",
-      header: "bg-red-400",
-      badge: "bg-red-100 text-red-600",
-      itemHover: "hover:bg-red-100",
-      itemBorder: "border-red-200",
-    },
-    items: [
-      { label: "홈 대시보드", page: "dashBoard" },
-    ],
-  },
-  {
-    id: 2,
-    title: "아티클 (Articles)",
-    emoji: "📰",
-    colorClass: {
-      bg: "bg-indigo-50",
-      border: "border-indigo-200",
-      header: "bg-indigo-400",
-      badge: "bg-indigo-100 text-indigo-600",
-      itemHover: "hover:bg-indigo-100",
-      itemBorder: "border-indigo-200",
-    },
-    items: [{ label: "전세사기 방지 컨텐츠 보기", page: "article" }],
-  },
-  {
-    id: 3,
-    title: "학습 (Learning)",
-    emoji: "📚",
-    colorClass: {
-      bg: "bg-green-50",
-      border: "border-green-200",
-      header: "bg-green-500",
-      badge: "bg-green-100 text-green-700",
-      itemHover: "hover:bg-green-100",
-      itemBorder: "border-green-200",
-    },
-    items: [
-      { label: "학습 도메인 목록 (depth1)", page: "learningHome" },
-      { label: "챕터 목록 (depth2 · 부동산)", page: "chapterList" },
-      { label: "단어 학습", page: "wordLearning" },
-      { label: "챕터 결과 · 완벽 방어! (정답률 80~100%)", page: "resultPerfect" },
-      { label: "챕터 결과 · 아슬아슬 방어 (정답률 40~79%)", page: "resultClose" },
-      { label: "챕터 결과 · 탈탈 털림... (정답률 0~39%)", page: "resultFail" },
-      { label: "지문형 객관식 퀴즈 (A/B/C UI UX테스트)", page: "choiceQuestion" },
-      { label: "지문형 OX 퀴즈 (A/B/C UI UX테스트)", page: "oxQuestion" },
-      { label: "대화형 객관식 퀴즈", page: "conversationQuestion" },
-      { label: "문서형 객관식", page: "documentChoiceQuestion" },
-      { label: "문서 클릭", page: "documentClickQuestion" },
-    ],
-  },
-  {
-    id: 4,
-    title: "오답노트 (Review Note)",
-    emoji: "📝",
-    colorClass: {
-      bg: "bg-orange-50",
-      border: "border-orange-200",
-      header: "bg-orange-400",
-      badge: "bg-orange-100 text-orange-600",
-      itemHover: "hover:bg-orange-100",
-      itemBorder: "border-orange-200",
-    },
-    items: [{ label: "오답노트", page: "mistakeNote" }],
-  },
-  {
-    id: 5,
-    title: "마이 (My Page)",
-    emoji: "👤",
-    colorClass: {
-      bg: "bg-slate-50",
-      border: "border-slate-200",
-      header: "bg-slate-400",
-      badge: "bg-slate-100 text-slate-600",
-      itemHover: "hover:bg-slate-100",
-      itemBorder: "border-slate-200",
-    },
-    items: [{ label: "마이페이지", page: "mypage" }],
-  },
 ]
 
 type HomeProps = {
   onNavigate: (page: Page) => void
 }
 
+function TreeItem({ 
+  node, 
+  depth = 0, 
+  onNavigate, 
+  setShowOnboarding 
+}: { 
+  node: IANode, 
+  depth?: number, 
+  onNavigate: (p: Page) => void,
+  setShowOnboarding: (s: boolean) => void 
+}) {
+  const hasChildren = node.children && node.children.length > 0
+  const isClickable = node.page || node.action
+
+  return (
+    <div className="flex flex-col">
+      <div 
+        className={`flex items-center gap-2 py-2 group ${depth > 0 ? "ml-4 border-l border-slate-200 pl-4" : ""}`}
+      >
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          {hasChildren ? (
+            <Folder size={14} className="text-slate-400 shrink-0" />
+          ) : (
+            <FileText size={14} className="text-slate-300 shrink-0" />
+          )}
+          <span className={`text-sm truncate ${depth === 0 ? "font-bold text-slate-900" : "font-medium text-slate-600"}`}>
+            {node.label}
+          </span>
+        </div>
+
+        {isClickable && (
+          <button
+            onClick={() => {
+              if (node.action === "onboarding") setShowOnboarding(true)
+              else if (node.page) onNavigate(node.page)
+            }}
+            className="shrink-0 flex items-center gap-1 rounded-md bg-slate-50 border border-slate-200 px-2 py-1 text-[10px] font-bold text-slate-500 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all"
+          >
+            {node.action ? <PlayCircle size={10} /> : <ChevronRight size={10} />}
+            GO
+          </button>
+        )}
+      </div>
+
+      {hasChildren && (
+        <div className="flex flex-col">
+          {node.children!.map((child, i) => (
+            <TreeItem 
+              key={`${child.label}-${i}`} 
+              node={child} 
+              depth={depth + 1} 
+              onNavigate={onNavigate} 
+              setShowOnboarding={setShowOnboarding} 
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function Home({ onNavigate }: HomeProps) {
   const [showOnboarding, setShowOnboarding] = useState(false)
 
   return (
-    <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-slate-100 text-slate-900">
-      <div className="flex h-full flex-col">
-        <header className="shrink-0 bg-white px-5 py-4 shadow-sm">
-          <h1 className="text-lg font-bold text-slate-800">🗺️ BiteLearn IA</h1>
-          <p className="mt-0.5 text-xs text-slate-400">항목을 눌러 화면으로 이동하세요</p>
-        </header>
+    <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900 flex flex-col border border-slate-200 shadow-2xl">
+      <header className="shrink-0 bg-slate-50/50 border-b border-slate-100 px-6 py-8">
+        <div className="flex items-center gap-2 mb-1">
+           <div className="h-2.5 w-2.5 rounded-full bg-slate-900" />
+           <h1 className="text-xl font-bold tracking-tight text-slate-900 uppercase">BiteLearn IA</h1>
+        </div>
+        <p className="text-xs font-medium text-slate-400 tracking-tight">Information Architecture & Navigation Flow</p>
+      </header>
 
-        <section className="shrink-0 border-b bg-white p-4">
+      <section className="flex-1 overflow-y-auto hide-scrollbar px-6 py-6 bg-[radial-gradient(#f1f5f9_1.5px,transparent_1.5px)] [background-size:24px_24px]">
+        <div className="rounded-[32px] border-2 border-slate-100 bg-white/90 backdrop-blur-sm p-6 shadow-xl shadow-slate-200/30">
           <div className="flex flex-col gap-2">
-            <h2 className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Core Flows</h2>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                onClick={() => setShowOnboarding(true)}
-                className="flex items-center justify-center rounded-lg border border-indigo-200 bg-indigo-50 py-2 text-xs font-semibold text-indigo-700 hover:bg-indigo-100"
-              >
-                온보딩
-              </button>
-              <button
-                onClick={() => onNavigate("login")}
-                className="flex items-center justify-center rounded-lg border border-slate-200 bg-white py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-              >
-                로그인
-              </button>
-              <button
-                onClick={() => onNavigate("signup")}
-                className="flex items-center justify-center rounded-lg border border-slate-200 bg-white py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-              >
-                회원가입
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <section className="flex-1 overflow-y-auto p-4">
-          <div className="flex flex-col gap-3">
-            {IA_TABS.map((tab) => (
-              <div
-                key={tab.id}
-                className={`overflow-hidden rounded-xl border ${tab.colorClass.bg} ${tab.colorClass.border}`}
-              >
-                <div className={`flex items-center gap-2 px-4 py-2.5 ${tab.colorClass.header}`}>
-                  <span className="text-sm">{tab.emoji}</span>
-                  <span className="text-sm font-semibold text-white">Tab {tab.id} - {tab.title}</span>
-                </div>
-
-                <div className="flex flex-col gap-1.5 p-3">
-                  {tab.items.map((item) => {
-                    const isEnabled = item.page !== undefined || item.action !== undefined
-
-                    return (
-                      <button
-                        key={item.label}
-                        disabled={!isEnabled}
-                        onClick={() => {
-                          if (item.action === "onboarding") {
-                            setShowOnboarding(true)
-                          } else if (item.page) {
-                            onNavigate(item.page)
-                          }
-                        }}
-                        className={`flex w-full items-center justify-between rounded-lg border px-3 py-2.5 text-left text-sm transition-colors
-                          ${tab.colorClass.itemBorder}
-                          ${
-                            isEnabled
-                              ? `cursor-pointer bg-white font-medium ${tab.colorClass.itemHover}`
-                              : "cursor-not-allowed bg-white/60 text-slate-400"
-                          }`}
-                      >
-                        <span>{item.label}</span>
-                        {isEnabled ? (
-                          <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${tab.colorClass.badge}`}>
-                            이동 -&gt;
-                          </span>
-                        ) : (
-                          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-400">준비 중</span>
-                        )}
-                      </button>
-                    )
-                  })}
-                </div>
+            {IA_STRUCTURE.map((section, i) => (
+              <div key={i} className={i !== 0 ? "mt-6 pt-6 border-t border-slate-100" : ""}>
+                <TreeItem 
+                  node={section} 
+                  onNavigate={onNavigate} 
+                  setShowOnboarding={setShowOnboarding} 
+                />
               </div>
             ))}
           </div>
-        </section>
-      </div>
+        </div>
+
+        <div className="mt-12 mb-8 text-center">
+           <p className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.3em]">BiteLearn Prototype Navigation</p>
+        </div>
+      </section>
+
       <OnboardingModal isOpen={showOnboarding} onClose={() => setShowOnboarding(false)} />
     </main>
   )

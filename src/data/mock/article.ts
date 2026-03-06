@@ -77,8 +77,11 @@ export interface ArticleDetail {
 
 // ─── Mock Data ──────────────────────────────────────────────
 
-/** 
- * [샘플 아티클] 전세사기 방지 체크리스트 
+export const ARTICLE_CATEGORIES = ["전체", "부동산·주거", "생활금융·고용", "커리어·세무", "자산운용·투자"] as const
+export type ArticleCategory = typeof ARTICLE_CATEGORIES[number]
+
+/**
+ * [샘플 아티클] 전세사기 방지 체크리스트
  * 바이트런 앱의 아티클 상세 화면 시연을 위한 모크 데이터입니다.
  */
 export const mockArticles: ArticleDetail[] = [
@@ -142,5 +145,96 @@ export const mockArticles: ArticleDetail[] = [
       url: "/safety-check",
       style: "primary",
     },
+  },
+  {
+    articleId: "article-2026-002",
+    category: "부동산·주거",
+    title: "등기부등본 혼자 읽는 법 – 갑구·을구·표제부 완전 해석",
+    thumbnailUrl: "",
+    author: { name: "에디터 샐리", role: "주거 안전 어드바이저", profileImageUrl: "" },
+    publishedAt: "2026-02-21T09:00:00Z",
+    viewCount: 8821,
+    tags: ["등기부등본", "갑구", "을구", "부동산"],
+    summary: { title: "3줄 요약", points: ["갑구는 소유권, 을구는 담보권을 보여줘요.", "근저당권 설정 금액이 집값의 70% 미만인지 확인하세요.", "표제부에서 건물 현황과 면적을 먼저 확인하세요."] },
+    contentBlocks: [{ type: "paragraph", content: "등기부등본은 집의 '신분증'이에요. 처음 펼치면 머리가 아프지만, 딱 세 파트만 보면 됩니다." }],
+    callToAction: { text: "등기부등본 용어 퀴즈 풀기", url: "/quiz", style: "primary" },
+  },
+  {
+    articleId: "article-2026-003",
+    category: "생활금융·고용",
+    title: "신용점수 800 만들기 – 지금 당장 할 수 있는 5가지",
+    thumbnailUrl: "",
+    author: { name: "에디터 민준", role: "금융 리터러시 큐레이터", profileImageUrl: "" },
+    publishedAt: "2026-02-18T10:00:00Z",
+    viewCount: 15302,
+    tags: ["신용점수", "금융", "부채관리", "청년금융"],
+    summary: { title: "핵심 요약", points: ["연체 한 번이 신용점수를 수십 점 떨어뜨려요.", "카드 한도 대비 사용률을 30% 미만으로 유지하세요.", "안 쓰는 대출 한도는 정리하는 게 좋아요."] },
+    contentBlocks: [{ type: "paragraph", content: "신용점수는 금융 이력을 쌓는 것에서 시작해요. 지금 당장 실천할 수 있는 방법을 알려드릴게요." }],
+    callToAction: { text: "신용점수 챕터 바로 시작하기", url: "/learn", style: "primary" },
+  },
+  {
+    articleId: "article-2026-004",
+    category: "생활금융·고용",
+    title: "실업급여 받는 조건 총정리 – 퇴직 사유별 수급 가이드",
+    thumbnailUrl: "",
+    author: { name: "에디터 민준", role: "금융 리터러시 큐레이터", profileImageUrl: "" },
+    publishedAt: "2026-02-14T09:30:00Z",
+    viewCount: 22100,
+    tags: ["실업급여", "고용보험", "퇴직", "권리"],
+    summary: { title: "핵심 요약", points: ["자발적 퇴사라도 특정 조건에서 실업급여를 받을 수 있어요.", "고용보험 가입 기간이 최소 180일 이상이어야 해요.", "신청은 퇴직 후 12개월 이내에 해야 해요."] },
+    contentBlocks: [{ type: "paragraph", content: "퇴사했다고 무조건 실업급여를 못 받는 건 아니에요. 내 상황에 해당하는지 확인해보세요." }],
+    callToAction: { text: "고용보험 챕터 학습하기", url: "/learn", style: "primary" },
+  },
+  {
+    articleId: "article-2026-005",
+    category: "커리어·세무",
+    title: "연말정산 환급 극대화 – 놓치기 쉬운 공제 항목 7가지",
+    thumbnailUrl: "",
+    author: { name: "에디터 지수", role: "세무 컨텐츠 에디터", profileImageUrl: "" },
+    publishedAt: "2026-01-30T08:00:00Z",
+    viewCount: 31540,
+    tags: ["연말정산", "세금공제", "환급", "직장인"],
+    summary: { title: "핵심 요약", points: ["월세 세액공제는 소득 기준을 맞추면 최대 17%까지 공제돼요.", "중소기업 취업자 소득세 감면은 신청을 안 하면 그냥 못 받아요.", "청약저축 소득공제는 연 240만 원까지 적용돼요."] },
+    contentBlocks: [{ type: "paragraph", content: "직장인이 가장 관심 갖는 13월의 월급, 연말정산. 알고 신청하면 환급액이 달라져요." }],
+    callToAction: { text: "연말정산 챕터 학습하기", url: "/learn", style: "primary" },
+  },
+  {
+    articleId: "article-2026-006",
+    category: "커리어·세무",
+    title: "프리랜서·투잡러 종합소득세 신고, 이것만 알면 끝",
+    thumbnailUrl: "",
+    author: { name: "에디터 지수", role: "세무 컨텐츠 에디터", profileImageUrl: "" },
+    publishedAt: "2026-01-22T10:00:00Z",
+    viewCount: 9870,
+    tags: ["종합소득세", "프리랜서", "투잡", "세금"],
+    summary: { title: "핵심 요약", points: ["부업 소득이 연 300만 원을 초과하면 종합소득세 신고 대상이에요.", "3.3% 원천징수를 냈어도 5월에 다시 신고해야 해요.", "홈택스에서 직접 신고할 수 있어요."] },
+    contentBlocks: [{ type: "paragraph", content: "N잡 시대, 프리랜서 소득을 신고 안 하면 가산세가 붙을 수 있어요." }],
+    callToAction: { text: "종합소득세 챕터 학습하기", url: "/learn", style: "primary" },
+  },
+  {
+    articleId: "article-2026-007",
+    category: "자산운용·투자",
+    title: "ISA 계좌 완벽 가이드 – 세금 0원으로 투자하는 방법",
+    thumbnailUrl: "",
+    author: { name: "에디터 현우", role: "투자 에디터", profileImageUrl: "" },
+    publishedAt: "2026-01-15T09:00:00Z",
+    viewCount: 18220,
+    tags: ["ISA", "절세", "투자", "ETF"],
+    summary: { title: "핵심 요약", points: ["ISA는 연간 2,000만 원까지 납입 가능하고 이자·배당을 비과세 처리할 수 있어요.", "서민형은 400만 원, 일반형은 200만 원까지 비과세 혜택을 받아요.", "만기 해지 후 연금저축으로 이전하면 추가 세액공제도 가능해요."] },
+    contentBlocks: [{ type: "paragraph", content: "ISA는 '세금 우산' 역할을 하는 계좌예요. 만들어 두기만 해도 절세 혜택이 쌓여요." }],
+    callToAction: { text: "ISA 절세 챕터 학습하기", url: "/learn", style: "primary" },
+  },
+  {
+    articleId: "article-2026-008",
+    category: "자산운용·투자",
+    title: "S&P500 ETF 투자 시작하기 – 미국 주식, 진짜 쉽게 설명합니다",
+    thumbnailUrl: "",
+    author: { name: "에디터 현우", role: "투자 에디터", profileImageUrl: "" },
+    publishedAt: "2026-01-08T09:00:00Z",
+    viewCount: 24700,
+    tags: ["ETF", "S&P500", "해외투자", "적립식"],
+    summary: { title: "핵심 요약", points: ["S&P500은 미국 대표 기업 500개에 분산 투자하는 효과예요.", "매달 일정 금액 적립식으로 매수하면 리스크를 낮출 수 있어요.", "환율 리스크를 고려해 환헤지 여부를 선택하세요."] },
+    contentBlocks: [{ type: "paragraph", content: "처음 투자를 시작한다면 S&P500 ETF가 가장 안전한 출발점이에요." }],
+    callToAction: { text: "ETF 투자 챕터 학습하기", url: "/learn", style: "primary" },
   },
 ]

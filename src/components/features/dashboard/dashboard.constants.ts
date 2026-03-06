@@ -4,7 +4,7 @@ import type { DashboardCategory, DashboardRecommendation, DashboardTab } from ".
 export const DASHBOARD_TABS: DashboardTab[] = [
   { label: "홈", icon: House, active: true },
   { label: "학습", icon: GraduationCap, active: false },
-  { label: "오답노트", icon: BookOpenCheck, active: false },
+  { label: "노트", icon: BookOpenCheck, active: false },
   { label: "아티클", icon: FileText, active: false },
   { label: "마이", icon: UserRound, active: false },
 ]

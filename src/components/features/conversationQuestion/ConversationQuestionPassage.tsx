@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import QuizFooter from "@/components/layout/QuizFooter"
 import type { ChoiceQuestionItem } from "@/data/mock/choiceQuestion"
+import QuestionPassage from "@/components/common/QuestionPassage"
 
 type ConversationQuestionPassageProps = {
   questionData: ChoiceQuestionItem
@@ -55,7 +56,7 @@ export default function ConversationQuestionPassage({
     const typingTimer = setTimeout(() => setShowTyping(true), readingDelay)
     const bubbleTimer = setTimeout(() => {
       setShowTyping(false)
-      setVisibleCount((prev) => prev + 1)
+      setVisibleCount((prev: number) => prev + 1)
     }, readingDelay + 900)
 
     return () => {
@@ -79,107 +80,112 @@ export default function ConversationQuestionPassage({
     <>
       <section
         ref={scrollRef}
-        className="flex-1 overflow-y-auto px-4 bg-slate-100"
+        className="flex-1 overflow-y-auto px-6 py-4 bg-slate-50"
         data-mode="conversation"
       >
-        <div className="flex flex-col gap-3 py-5">
-          {/* ✅ 이미 나타난 말풍선만 렌더링 (공간 낭비 없음) */}
-          {conversations.slice(0, visibleCount).map((conv) => {
-            const speaker = conversationSpeakers.find((s) => s.id === conv.speakerId)
-            const isLeft = speaker?.position === "left"
+        <QuestionPassage
+          passage={questionData.passage}
+          flavorText={questionData.flavorText}
+        >
+          <div className="flex flex-col gap-3 py-5">
+            {/* ✅ 이미 나타난 말풍선만 렌더링 (공간 낭비 없음) */}
+            {conversations.slice(0, visibleCount).map((conv) => {
+              const speaker = conversationSpeakers.find((s) => s.id === conv.speakerId)
+              const isLeft = speaker?.position === "left"
 
-            const alignClass = isLeft ? "justify-start" : "justify-end"
-            const bubbleClass = isLeft
-              ? "bg-white text-slate-800 border border-slate-200 rounded-bl-none shadow-sm"
-              : "bg-[#64748B] text-white rounded-br-none shadow-sm"
+              const alignClass = isLeft ? "justify-start" : "justify-end"
+              const bubbleClass = isLeft
+                ? "bg-white text-slate-800 border border-slate-200 rounded-bl-none shadow-sm"
+                : "bg-slate-700 text-white rounded-br-none shadow-sm"
 
-            return (
-              <div
-                key={conv.id}
-                className={`flex w-full ${alignClass} items-end gap-2 animate-bubble-in`}
-              >
-                {/* 왼쪽 프로필 */}
-                {isLeft && (
-                  <div className="shrink-0">
-                    {speaker?.profileImageUrl ? (
-                      <img
-                        src={speaker.profileImageUrl}
-                        alt={speaker.name || "profile"}
-                        className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm"
-                      />
-                    ) : (
-                      <div className="w-9 h-9 rounded-full bg-slate-300 flex items-center justify-center text-xs text-white font-bold">
-                        {speaker?.name?.[0] ?? "?"}
-                      </div>
-                    )}
+              return (
+                <div
+                  key={conv.id}
+                  className={`flex w-full ${alignClass} items-end gap-2 animate-bubble-in`}
+                >
+                  {/* 왼쪽 프로필 */}
+                  {isLeft && (
+                    <div className="shrink-0 mb-1">
+                      {speaker?.profileImageUrl ? (
+                        <img
+                          src={speaker.profileImageUrl}
+                          alt={speaker.name || "profile"}
+                          className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm"
+                        />
+                      ) : (
+                        <div className="w-9 h-9 rounded-full bg-slate-300 flex items-center justify-center text-xs text-white font-bold">
+                          {speaker?.name?.[0] ?? "?"}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* 말풍선 */}
+                  <div className={`max-w-[72%] px-4 py-2.5 rounded-2xl text-[14.5px] leading-relaxed ${bubbleClass}`}>
+                    {conv.message.split("\n").map((line, i, arr) => (
+                      <span key={i}>
+                        {line}
+                        {i < arr.length - 1 && <br />}
+                      </span>
+                    ))}
                   </div>
-                )}
 
-                {/* 말풍선 */}
-                <div className={`max-w-[72%] px-4 py-2.5 rounded-2xl text-[14.5px] leading-relaxed ${bubbleClass}`}>
-                  {conv.message.split("\n").map((line, i, arr) => (
-                    <span key={i}>
-                      {line}
-                      {i < arr.length - 1 && <br />}
-                    </span>
-                  ))}
+                  {/* 오른쪽 프로필 */}
+                  {!isLeft && (
+                    <div className="shrink-0 mb-1">
+                      {speaker?.profileImageUrl ? (
+                        <img
+                          src={speaker.profileImageUrl}
+                          alt={speaker.name || "나"}
+                          className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm"
+                        />
+                      ) : (
+                        <div className="w-9 h-9 rounded-full bg-indigo-400 flex items-center justify-center text-xs text-white font-bold">
+                          나
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
+              )
+            })}
 
-                {/* 오른쪽 프로필 */}
-                {!isLeft && (
-                  <div className="shrink-0">
-                    {speaker?.profileImageUrl ? (
-                      <img
-                        src={speaker.profileImageUrl}
-                        alt={speaker.name || "나"}
-                        className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm"
-                      />
-                    ) : (
-                      <div className="w-9 h-9 rounded-full bg-indigo-400 flex items-center justify-center text-xs text-white font-bold">
-                        나
-                      </div>
-                    )}
-                  </div>
+            {/* ✅ 타이핑 인디케이터: 다음 말풍선 바로 아래에 같은 방향으로 위치 */}
+            {showTyping && nextConv && (
+              <div className={`flex items-end gap-2 animate-bubble-in ${nextIsLeft ? "justify-start" : "justify-end"}`}>
+                {nextIsLeft && nextSpeaker?.profileImageUrl && (
+                  <img
+                    src={nextSpeaker.profileImageUrl}
+                    alt=""
+                    className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm mb-1"
+                  />
+                )}
+                <div className={`flex gap-1.5 px-4 py-3.5 rounded-2xl shadow-sm ${nextIsLeft ? "bg-white border border-slate-200 rounded-bl-none" : "bg-slate-700/80 rounded-br-none"}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full animate-bounce [animation-delay:0ms] ${nextIsLeft ? "bg-slate-400" : "bg-white/70"}`} />
+                  <span className={`w-1.5 h-1.5 rounded-full animate-bounce [animation-delay:150ms] ${nextIsLeft ? "bg-slate-400" : "bg-white/70"}`} />
+                  <span className={`w-1.5 h-1.5 rounded-full animate-bounce [animation-delay:300ms] ${nextIsLeft ? "bg-slate-400" : "bg-white/70"}`} />
+                </div>
+                {!nextIsLeft && nextSpeaker?.profileImageUrl && (
+                  <img
+                    src={nextSpeaker.profileImageUrl}
+                    alt=""
+                    className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm mb-1"
+                  />
                 )}
               </div>
-            )
-          })}
+            )}
 
-          {/* ✅ 타이핑 인디케이터: 다음 말풍선 바로 아래에 같은 방향으로 위치 */}
-          {showTyping && nextConv && (
-            <div className={`flex items-end gap-2 animate-bubble-in ${nextIsLeft ? "justify-start" : "justify-end"}`}>
-              {nextIsLeft && nextSpeaker?.profileImageUrl && (
-                <img
-                  src={nextSpeaker.profileImageUrl}
-                  alt=""
-                  className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm"
-                />
-              )}
-              <div className={`flex gap-1.5 px-4 py-3.5 rounded-2xl shadow-sm ${nextIsLeft ? "bg-white border border-slate-200 rounded-bl-none" : "bg-[#64748B]/80 rounded-br-none"}`}>
-                <span className={`w-2 h-2 rounded-full animate-bounce [animation-delay:0ms] ${nextIsLeft ? "bg-slate-400" : "bg-white/70"}`} />
-                <span className={`w-2 h-2 rounded-full animate-bounce [animation-delay:150ms] ${nextIsLeft ? "bg-slate-400" : "bg-white/70"}`} />
-                <span className={`w-2 h-2 rounded-full animate-bounce [animation-delay:300ms] ${nextIsLeft ? "bg-slate-400" : "bg-white/70"}`} />
+            {/* 대화 하단 안내 박스 */}
+            {allVisible && conversationInfoBox && (
+              <div className="mt-4 rounded-2xl bg-amber-50 border border-amber-100 p-5 animate-bubble-in shadow-sm">
+                <h4 className="flex items-center gap-2 text-sm font-bold text-amber-900 mb-2">
+                  <span className="text-lg">💡</span> {conversationInfoBox.title}
+                </h4>
+                <p className="text-sm text-amber-800 leading-relaxed opacity-90">{conversationInfoBox.content}</p>
               </div>
-              {!nextIsLeft && nextSpeaker?.profileImageUrl && (
-                <img
-                  src={nextSpeaker.profileImageUrl}
-                  alt=""
-                  className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm"
-                />
-              )}
-            </div>
-          )}
-
-          {/* 대화 하단 안내 박스 */}
-          {allVisible && conversationInfoBox && (
-            <div className="mt-2 rounded-xl bg-amber-50 border border-amber-200 p-4 animate-bubble-in">
-              <h4 className="flex items-center gap-1.5 text-sm font-bold text-amber-900 mb-1.5">
-                <span className="text-base">💡</span> {conversationInfoBox.title}
-              </h4>
-              <p className="text-sm text-amber-800 leading-relaxed">{conversationInfoBox.content}</p>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </QuestionPassage>
       </section>
 
       <style>{`

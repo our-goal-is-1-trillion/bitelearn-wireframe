@@ -57,10 +57,8 @@ export default function DocumentClickQuestion({ onComplete }: DocumentChoiceQues
     const correct = Number(resolvedChoice) === currentQuestion.correctIndex
     setSelectedChoice(resolvedChoice)
     
-    // UX Improvement: Start scanning phase
     setPhase("checking")
     
-    // Delay transition to result to show scanning animation
     setTimeout(() => {
       setMetrics((prev) => {
         const next = [...prev]
@@ -68,7 +66,7 @@ export default function DocumentClickQuestion({ onComplete }: DocumentChoiceQues
         return next
       })
       setPhase("result")
-    }, 2400) // Give enough time for scan bar to move
+    }, 2400)
   }
 
   const handleNextQuestion = () => {
@@ -129,32 +127,17 @@ export default function DocumentClickQuestion({ onComplete }: DocumentChoiceQues
                 onSolve={() => {}}
                 hideSolveButton
               />
-              <div className="absolute inset-x-0 bottom-0 p-6 bg-white border-t border-slate-100 z-30">
-                <button
-                  disabled={selectedChoice === "" || phase === "checking"}
-                  onClick={() => handleCheckAnswer()}
-                  className={`w-full h-14 rounded-2xl font-bold text-lg transition-all active:scale-95 shadow-xl ${
-                    phase === "checking" 
-                      ? "bg-slate-100 text-slate-400 cursor-not-allowed" 
-                      : "bg-slate-900 text-white shadow-slate-200"
-                  }`}
-                >
-                  {phase === "checking" ? "서류 스캔 중..." : "정답 확인하기"}
-                </button>
-                {phase !== "checking" && (
-                  <button 
-                    onClick={() => setPhase("passage")}
-                    className="w-full mt-4 text-xs font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-colors"
-                  >
-                    이전으로
-                  </button>
-                )}
-              </div>
+              <QuizFooter
+                disabled={selectedChoice === "" || phase === "checking"}
+                previousDisabled={phase === "checking"}
+                onClick={handleCheckAnswer}
+                onPrevious={() => setPhase("passage")}
+              >
+                {phase === "checking" ? "서류 스캔 중..." : "정답 확인하기"}
+              </QuizFooter>
             </>
           )
         }
-
-        // Fallback for other modes if any
         return null
       case "result":
         return (
@@ -181,7 +164,7 @@ export default function DocumentClickQuestion({ onComplete }: DocumentChoiceQues
       ref={screenRef}
       className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900"
     >
-      <div className="relative flex h-full flex-col border border-slate-200 pt-14 pb-32">
+      <div className="relative flex h-full flex-col border border-slate-200 pt-14">
         <div className="absolute inset-x-0 top-0 z-20 bg-white">
           <QuizHeader title={getQuizTypeLabel()} showCloseButton={false} />
         </div>
