@@ -1,13 +1,12 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ChevronLeft, Check, Lock, Clock, ChevronRight } from "lucide-react"
+import { Check, Lock, Clock, ChevronRight } from "lucide-react"
 import { GraduationCap, House, BookOpenCheck, FileText, UserRound } from "lucide-react"
 import DashboardBottomNav from "@/components/layout/DashboardBottomNav"
 import { MOCK_CATEGORY_CHAPTERS } from "@/data/mock/chapter"
 import type { Chapter } from "@/data/mock/chapter"
 
 type ChapterListProps = {
-  onBack: () => void
   onSelectChapter: (chapterId: string) => void
 }
 
@@ -171,7 +170,7 @@ function ChapterCard({
 }
 
 // ─── Main component ────────────────────────────────────────────
-export default function ChapterList({ onBack, onSelectChapter }: ChapterListProps) {
+export default function ChapterList({ onSelectChapter }: ChapterListProps) {
   const [selectedCategoryId, setSelectedCategoryId] = useState("real-estate")
   const [shakingId, setShakingId] = useState<string | null>(null)
 
@@ -206,14 +205,8 @@ export default function ChapterList({ onBack, onSelectChapter }: ChapterListProp
         <div className="absolute inset-x-0 top-0 z-20 border-b border-slate-100 bg-white">
           {/* Header bar */}
           <div className="flex h-14 items-center px-4">
-            <button
-              onClick={onBack}
-              className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-slate-50 active:bg-slate-100"
-            >
-              <ChevronLeft size={20} className="text-slate-600" />
-            </button>
+            <div className="h-8 w-8" />
             <h1 className="flex-1 text-center text-sm font-bold text-slate-900">학습</h1>
-            {/* spacer */}
             <div className="h-8 w-8" />
           </div>
 

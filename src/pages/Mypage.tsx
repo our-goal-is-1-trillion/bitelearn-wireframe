@@ -14,13 +14,6 @@ type MenuItem = {
 
 const MENU_ITEMS: MenuItem[] = [
   {
-    label: "앱 설정",
-    details: [
-      { text: "다크 모드", toggle: "OFF" },
-      { text: "메일 알림", toggle: "OFF" },
-    ],
-  },
-  {
     label: "서비스 약관",
     details: [
       { text: "이용 약관" },
@@ -56,10 +49,16 @@ export default function Mypage() {
   return (
     <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden border border-slate-200 bg-white text-slate-900 shadow-sm">
       {currentPage === "main" ? (
-      <section className="hide-scrollbar h-full overflow-y-auto px-5 py-6 pb-24">
-        <header className="mb-5">
-          <h1 className="text-xl font-bold">마이페이지</h1>
-        </header>
+      <>
+      <header className="absolute inset-x-0 top-0 z-20 border-b border-slate-100 bg-white">
+        <div className="flex h-14 items-center px-4">
+          <div className="h-8 w-8" />
+          <h1 className="flex-1 text-center text-sm font-bold text-slate-900">마이페이지</h1>
+          <div className="h-8 w-8" />
+        </div>
+      </header>
+
+      <section className="hide-scrollbar h-full overflow-y-auto px-5 pb-24 pt-20">
 
         <button
           type="button"
@@ -81,21 +80,6 @@ export default function Mypage() {
             </div>
           </div>
         </button>
-
-        <section className="mt-4 grid grid-cols-3 gap-2">
-          <article className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-center shadow-sm">
-            <p className="text-xs text-slate-600">학습일</p>
-            <p className="mt-1 text-lg font-bold">12일</p>
-          </article>
-          <article className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-center shadow-sm">
-            <p className="text-xs text-slate-600">완료 퀴즈</p>
-            <p className="mt-1 text-lg font-bold">34개</p>
-          </article>
-          <article className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-center shadow-sm">
-            <p className="text-xs text-slate-600">평균 정답률</p>
-            <p className="mt-1 text-lg font-bold">82%</p>
-          </article>
-        </section>
 
         <section className="mt-5">
           <article className="px-4 py-4">
@@ -145,6 +129,7 @@ export default function Mypage() {
         </section>
 
       </section>
+      </>
       ) : (
         <AccountInfoPage onBack={() => setCurrentPage("main")} />
       )}

@@ -26,6 +26,7 @@ import Mypage from "@/pages/Mypage"
 import ArticleDetail from "@/components/features/article/ArticleDetail"
 import { MOCK_CHOICE_QUESTION_SET } from "@/data/mock/choiceQuestion"
 import ChapterList from "@/components/features/chapter/ChapterList"
+import MistakeNote from "@/pages/MistakeNote"
 
 export type QuizResultData = {
   total: number
@@ -55,6 +56,7 @@ export type Page =
   | "signup"
   | "mypage"
   | "chapterList"
+  | "mistakeNote"
 
 type TransitionStage = "idle" | "out" | "in"
 
@@ -220,10 +222,12 @@ export default function App() {
       case "chapterList":
         return (
           <ChapterList
-            onBack={() => handleNavigate("home")}
             onSelectChapter={() => handleNavigate("home")}
           />
         )
+
+      case "mistakeNote":
+        return <MistakeNote />
 
       default:
         return <Home onNavigate={handleNavigate} />

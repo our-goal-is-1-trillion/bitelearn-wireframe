@@ -23,6 +23,7 @@ export type Page =
   | "signup"
   | "mypage"
   | "chapterList"
+  | "mistakeNote"
 
 type IAAction = "onboarding"
 
@@ -105,8 +106,8 @@ const IA_TABS: IATab[] = [
   },
   {
     id: 4,
-    title: "아카이브 (Archive)",
-    emoji: "🗂️",
+    title: "오답노트 (Review Note)",
+    emoji: "📝",
     colorClass: {
       bg: "bg-orange-50",
       border: "border-orange-200",
@@ -115,7 +116,7 @@ const IA_TABS: IATab[] = [
       itemHover: "hover:bg-orange-100",
       itemBorder: "border-orange-200",
     },
-    items: [{ label: "미정" }],
+    items: [{ label: "오답노트", page: "mistakeNote" }],
   },
   {
     id: 5,
