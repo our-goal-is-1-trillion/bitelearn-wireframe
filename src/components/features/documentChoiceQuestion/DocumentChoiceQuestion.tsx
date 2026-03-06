@@ -1,8 +1,6 @@
 import { useRef, useState } from "react"
 import QuizHeader from "@/components/layout/QuizHeader"
-import QuizFooter from "@/components/layout/QuizFooter"
 import ChoiceQuestionIndicator, { type StepIndicatorInfo } from "./ChoiceQuestionIndicator"
-import ChoiceQuestionImage from "./ChoiceQuestionImage"
 import ChoiceQuestionPassage from "./ChoiceQuestionPassage"
 import ChoiceQuestionChoices from "./ChoiceQuestionChoices"
 import ChoiceQuestionOXChoices from "./ChoiceQuestionOXChoices"

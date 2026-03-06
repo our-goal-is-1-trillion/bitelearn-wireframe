@@ -1,6 +1,7 @@
 import { useState } from "react"
 import QuizHeader from "@/components/layout/QuizHeader"
 import ChoiceQuestionIndicator from "@/components/features/choiceQuestion/ChoiceQuestionIndicator"
+import ChoiceQuestionImage from "@/components/features/choiceQuestion/ChoiceQuestionImage"
 import ChoiceQuestionPassage from "@/components/features/choiceQuestion/ChoiceQuestionPassage"
 import ChoiceQuestionOXChoices from "@/components/features/choiceQuestion/ChoiceQuestionOXChoices"
 import ChoiceQuestionResult from "@/components/features/choiceQuestion/ChoiceQuestionResult"
@@ -128,7 +129,7 @@ export default function OxQuestion({ onComplete }: OxQuestionProps) {
 
   return (
     <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900">
-      <div className="relative flex h-full flex-col border border-slate-200 pb-20 pt-14">
+      <div className="relative flex h-full flex-col border border-slate-200 pt-14">
         <div className="absolute inset-x-0 top-0 z-20 bg-white">
           <QuizHeader
             title="OX 퀴즈 (지문형)"
@@ -138,7 +139,10 @@ export default function OxQuestion({ onComplete }: OxQuestionProps) {
         </div>
 
         {phase !== "result" && (
-          <ChoiceQuestionIndicator steps={indicatorSteps} />
+          <>
+            <ChoiceQuestionIndicator steps={indicatorSteps} />
+            <ChoiceQuestionImage src={currentQuestion.imageUrl} alt={currentQuestion.imageAlt} />
+          </>
         )}
 
         {renderPhaseContent()}

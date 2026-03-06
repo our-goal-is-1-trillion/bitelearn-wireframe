@@ -7,8 +7,9 @@ import { MOCK_CATEGORY_CHAPTERS } from "@/data/mock/chapter"
 import type { Chapter } from "@/data/mock/chapter"
 
 type ChapterListProps = {
+  initialCategoryId?: string
   onBack: () => void
-  onSelectChapter: (chapterId: string) => void
+  onSelectChapter: (chapterId?: string) => void
   onTabClick?: (label: string) => void
 }
 
@@ -88,8 +89,8 @@ function StageNode({
 }
 
 // ─── Main component ────────────────────────────────────────────
-export default function ChapterList({ onBack, onSelectChapter, onTabClick }: ChapterListProps) {
-  const [selectedCategoryId, setSelectedCategoryId] = useState("real-estate")
+export default function ChapterList({ initialCategoryId, onBack, onSelectChapter, onTabClick }: ChapterListProps) {
+  const [selectedCategoryId, setSelectedCategoryId] = useState(initialCategoryId || "real-estate")
 
   const category = MOCK_CATEGORY_CHAPTERS.find((c) => c.categoryId === selectedCategoryId)!
   const progressPercent = Math.round((category.completedChapters / category.totalChapters) * 100)

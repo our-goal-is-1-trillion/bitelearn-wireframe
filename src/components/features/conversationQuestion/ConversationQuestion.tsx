@@ -1,6 +1,7 @@
 import { useRef, useState } from "react"
 import QuizHeader from "@/components/layout/QuizHeader"
 import ChoiceQuestionIndicator, { type StepIndicatorInfo } from "../choiceQuestion/ChoiceQuestionIndicator"
+import ChoiceQuestionImage from "../choiceQuestion/ChoiceQuestionImage"
 import ConversationQuestionPassage from "./ConversationQuestionPassage"
 import ChoiceQuestionChoices from "../choiceQuestion/ChoiceQuestionChoices"
 import ChoiceQuestionOXChoices from "../choiceQuestion/ChoiceQuestionOXChoices"
@@ -149,7 +150,7 @@ export default function ConversationQuestion({ onComplete }: ConversationQuestio
 
   return (
     <main ref={screenRef} className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900">
-      <div className="relative flex h-full flex-col border border-slate-200 pb-20 pt-14">
+      <div className="relative flex h-full flex-col border border-slate-200 pt-14">
         <div className="absolute inset-x-0 top-0 z-20 bg-white">
           <QuizHeader title={quizTypeLabel} showCloseButton onCloseClick={() => window.history.back()} />
         </div>
@@ -157,6 +158,7 @@ export default function ConversationQuestion({ onComplete }: ConversationQuestio
         {phase !== "result" && (
           <>
             <ChoiceQuestionIndicator steps={indicatorSteps} />
+            <ChoiceQuestionImage src={currentQuestion.imageUrl} alt={currentQuestion.imageAlt} />
           </>
         )}
 

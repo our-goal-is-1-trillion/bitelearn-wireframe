@@ -17,6 +17,7 @@ type DashboardHomeProps = {
   continueCategory?: string
   continueLessonTitle?: string
   continueMeta?: string
+  onTabClick?: (label: string) => void
 }
 
 export default function DashboardHome({
@@ -31,6 +32,7 @@ export default function DashboardHome({
   continueCategory,
   continueLessonTitle,
   continueMeta,
+  onTabClick,
 }: DashboardHomeProps) {
   return (
     <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white font-sans text-slate-900">
@@ -59,7 +61,7 @@ export default function DashboardHome({
           </div>
         </section>
 
-        <DashboardBottomNav tabs={tabs} />
+        <DashboardBottomNav tabs={tabs} onTabClick={onTabClick} />
       </div>
     </main>
   )

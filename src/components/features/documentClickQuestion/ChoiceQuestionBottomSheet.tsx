@@ -159,8 +159,6 @@ export default function ChoiceQuestionBottomSheet({ onComplete }: ChoiceQuestion
         {phase === "result" && (
           <ChoiceQuestionResult
             isCorrect={isCorrect}
-            correctAnswerText={currentQuestion.choices[currentQuestion.correctIndex]}
-            selectedAnswerText={selectedChoice !== "" ? currentQuestion.choices[Number(selectedChoice)] : ""}
             explanation={currentQuestion.explanation}
             characterImageUrl={isCorrect ? currentQuestion.characterCorrectImageUrl : currentQuestion.characterIncorrectImageUrl}
             isLastQuestion={isLastQuestion}

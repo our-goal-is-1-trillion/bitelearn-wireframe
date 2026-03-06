@@ -25,6 +25,7 @@ export type Page =
   | "signup"
   | "mypage"
   | "chapterList"
+  | "chapterPlayer"
   | "mistakeNote"
   | "learningHome"
 
@@ -70,7 +71,8 @@ const IA_STRUCTURE: IANode[] = [
             label: "챕터 목록 (Depth 2 · 로드맵)", 
             page: "chapterList",
             children: [
-              { label: "단어 학습 카드", page: "wordLearning" },
+              { label: "챕터 플레이어 (전체 14문항 통합)", page: "chapterPlayer" },
+              { label: "단어 학습 카드 (단독)", page: "wordLearning" },
               { 
                 label: "퀴즈 풀이 (Depth 3)",
                 children: [

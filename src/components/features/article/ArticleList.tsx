@@ -1,5 +1,5 @@
-import { useState, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState } from "react"
+import { motion } from "framer-motion"
 import { FileText, House, GraduationCap, BookOpenCheck, UserRound, ArrowRight, Clock, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import DashboardBottomNav from "@/components/layout/DashboardBottomNav"

@@ -1,8 +1,7 @@
 import { motion } from "framer-motion"
-import { ChevronLeft, Share2, Bookmark, CheckCircle2, ChevronDown } from "lucide-react"
+import { ChevronLeft, Share2, Bookmark, CheckCircle2 } from "lucide-react"
 import { mockArticles } from "@/data/mock/article"
 import type { ContentBlock } from "@/data/mock/article"
-import { useState } from "react"
 
 // 날짜 포맷팅 유틸리티
 const formatDate = (isoString: string) => {

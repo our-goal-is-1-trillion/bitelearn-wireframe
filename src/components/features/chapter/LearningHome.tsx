@@ -7,6 +7,7 @@ import type { CategoryChapters } from "@/data/mock/chapter"
 
 type LearningHomeProps = {
   onSelectCategory: (categoryId: string) => void
+  onTabClick?: (label: string) => void
 }
 
 const LEARNING_TABS = [
@@ -87,7 +88,7 @@ function CategoryCard({
   )
 }
 
-export default function LearningHome({ onSelectCategory }: LearningHomeProps) {
+export default function LearningHome({ onSelectCategory, onTabClick }: LearningHomeProps) {
   const totalDomains = MOCK_CATEGORY_CHAPTERS.length
   const startedDomains = MOCK_CATEGORY_CHAPTERS.filter((c) => c.completedChapters > 0).length
 
@@ -130,7 +131,7 @@ export default function LearningHome({ onSelectCategory }: LearningHomeProps) {
           </div>
         </section>
 
-        <DashboardBottomNav tabs={LEARNING_TABS} />
+        <DashboardBottomNav tabs={LEARNING_TABS} onTabClick={onTabClick} />
       </div>
     </main>
   )
