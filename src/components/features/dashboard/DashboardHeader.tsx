@@ -16,7 +16,6 @@ export default function DashboardHeader({
     <header className="py-8">
       <div className="flex items-start justify-between">
         <div className="space-y-2">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Personal Dashboard</p>
           <h2 className="text-2xl font-bold leading-tight tracking-tight text-slate-900">{title}</h2>
           <p className="text-sm font-medium text-slate-500 leading-relaxed">{subtitle}</p>
         </div>

@@ -1,6 +1,6 @@
 export const ONBOARDING_DATA = [
   {
-    image: `/images/onboarding/step1.png`,
+    image: `images/onboarding/step1.png`,
     title: (
       <>
         드디어 어른이 된 멍멍이,
@@ -18,7 +18,7 @@ export const ONBOARDING_DATA = [
     ),
   },
   {
-    image: `/images/onboarding/step2.png`,
+    image: `images/onboarding/step2.png`,
     title: (
       <>
         잠깐, '확정일자'요?
@@ -37,7 +37,7 @@ export const ONBOARDING_DATA = [
     ),
   },
   {
-    image: `/images/onboarding/step3.png`,
+    image: `images/onboarding/step3.png`,
     title: (
       <>
         걱정 마세요! 어려운 세상 물정,
@@ -56,7 +56,7 @@ export const ONBOARDING_DATA = [
     ),
   },
   {
-    image: `/images/onboarding/step4.png`,
+    image: `images/onboarding/step4.png`,
     title: (
       <>
         하찮은 멍멍이에서

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ONBOARDING_DATA } from '@/constants/onboardingData';
 import { X } from 'lucide-react';
+
 type OnboardingModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -25,6 +26,10 @@ export default function OnboardingModal({
   };
 
   const currentData = ONBOARDING_DATA[step];
+  
+  // Vite BASE_URL handling for robust image loading
+  const baseUrl = import.meta.env.BASE_URL;
+  const imageSrc = `${baseUrl}${currentData.image}`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 sm:p-0">
@@ -35,15 +40,15 @@ export default function OnboardingModal({
         transition={{ type: 'spring', stiffness: 300, damping: 25 }}
         className="relative flex h-[85vh] w-full max-w-md flex-col overflow-hidden rounded-[32px] bg-white shadow-2xl sm:h-[600px]"
       >
-        {/* 닫기 버튼 */}
+        {/* 건너뛰기 버튼 */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/5 text-slate-500 transition-colors hover:bg-black/10"
+          className="absolute right-4 top-4 z-10 flex h-10 items-center justify-center rounded-full bg-slate-50 px-3 text-xs font-bold text-slate-400 transition-colors hover:bg-slate-100 active:scale-95"
         >
-          <X className="h-5 w-5" />
-          <span className="sr-only">건너뛰기</span>
+          건너뛰기
         </button>
-        <div className="relative flex-1 overflow-hidden bg-slate-50/50">
+
+        <div className="relative flex-1 overflow-hidden bg-white">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}
@@ -51,38 +56,44 @@ export default function OnboardingModal({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="absolute inset-0 flex flex-col items-center justify-center"
+              className="absolute inset-0 flex flex-col items-center"
             >
-              {/* 이미지 영역 */}
-              <div className="relative h-[50%] max-h-[280px] w-full bg-indigo-50/50">
+              {/* 이미지 영역 (Lo-fi style) */}
+              <div className="relative h-[55%] w-full bg-slate-50 overflow-hidden border-b border-slate-100">
                 <img
-                  src={currentData.image}
-                  alt={`onboarding step ${step + 1}`}
-                  className="h-full w-full object-cover"
+                  src={imageSrc}
+                  alt={`온보딩 단계 ${step + 1}`}
+                  className="h-full w-full object-contain p-8"
+                  onError={(e) => {
+                    // Fallback for broken images during development
+                    console.error("Image load failed:", imageSrc);
+                    e.currentTarget.src = "https://via.placeholder.com/400x300?text=Image+Not+Found";
+                  }}
                 />
-                <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-slate-50/50 to-transparent" />
               </div>
 
-              {/* 텍스트 영역 */}
-              <div className="flex w-full flex-1 flex-col px-6 pb-4 pt-6 text-center">
-                <h2 className="mb-3 text-xl font-bold leading-tight text-slate-900">
+              {/* 텍스트 영역 (Typography Guideline) */}
+              <div className="flex w-full flex-1 flex-col px-8 pb-6 pt-10 text-center">
+                <h2 className="mb-4 text-2xl font-bold leading-tight text-slate-900 tracking-tight">
                   {currentData.title}
                 </h2>
-                <p className="text-[15px] leading-relaxed text-slate-600 [word-break:keep-all]">
+                <p className="text-[15px] font-medium leading-relaxed text-slate-500 [word-break:keep-all]">
                   {currentData.body}
                 </p>
               </div>
             </motion.div>
           </AnimatePresence>
         </div>
-        {/* 푸터 영역 */}
-        <div className="flex shrink-0 flex-col items-center gap-6 bg-white p-6 pt-2">
+
+        {/* 푸터 영역 (Lo-fi & Material spacing) */}
+        <div className="flex shrink-0 flex-col items-center gap-8 bg-white p-8 pt-4">
+          {/* 인디케이터 */}
           <div className="flex gap-2">
             {ONBOARDING_DATA.map((_, i) => (
               <div
                 key={i}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  i === step ? 'w-6 bg-indigo-600' : 'w-2 bg-slate-200'
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === step ? 'w-8 bg-slate-900' : 'w-2 bg-slate-200'
                 }`}
               />
             ))}
@@ -90,14 +101,10 @@ export default function OnboardingModal({
 
           <Button
             onClick={handleNext}
-            className={`h-14 w-full rounded-2xl text-lg font-bold shadow-md transition-all duration-300 ${
-              step === ONBOARDING_DATA.length - 1
-                ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-                : 'bg-slate-900 text-white hover:bg-slate-800'
-            }`}
+            className="h-14 w-full rounded-2xl bg-slate-900 text-lg font-bold text-white shadow-xl shadow-slate-200 transition-all active:scale-95 hover:bg-black"
           >
             {step === ONBOARDING_DATA.length - 1
-              ? '멋진 어른으로 출발하기 🚀'
+              ? '시작하기'
               : '다음'}
           </Button>
         </div>

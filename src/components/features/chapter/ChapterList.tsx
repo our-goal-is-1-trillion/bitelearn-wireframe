@@ -45,7 +45,6 @@ function StageNode({
       transition={{ delay: index * 0.05 }}
     >
       <div className="relative flex flex-col items-center">
-        {/* Stage Button */}
         <Button
           disabled={isLocked}
           onClick={onSelect}
@@ -65,22 +64,20 @@ function StageNode({
             <span className="text-3xl">{chapter.emoji}</span>
           )}
           
-          {/* Progress badge for in-progress */}
           {isInProgress && (
-            <div className="absolute -top-2 -right-1 rounded-full bg-slate-900 px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-tighter">
-              LIVE
+            <div className="absolute -top-2 -right-1 rounded-full bg-slate-900 px-2 py-0.5 text-[10px] font-bold text-white">
+              진행 중
             </div>
           )}
         </Button>
 
-        {/* Title Label */}
         <div className="mt-3 max-w-[120px] text-center">
           <p className={`text-xs font-bold leading-tight ${isLocked ? "text-slate-400" : "text-slate-900"}`}>
             {chapter.title}
           </p>
           {!isLocked && (
             <p className="mt-1 text-xs text-slate-400 font-medium">
-              {chapter.estimatedMinutes}분 · {chapter.questionCount}문제
+              약 {chapter.estimatedMinutes}분 · {chapter.questionCount}문제
             </p>
           )}
         </div>
@@ -100,7 +97,6 @@ export default function ChapterList({ onBack, onSelectChapter }: ChapterListProp
     <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900">
       <div className="relative flex h-full flex-col border border-slate-200">
 
-        {/* ── Fixed header ────────────────────────── */}
         <div className="absolute inset-x-0 top-0 z-20 bg-white border-b border-slate-100">
           <div className="flex h-14 items-center px-4">
             <Button
@@ -111,7 +107,7 @@ export default function ChapterList({ onBack, onSelectChapter }: ChapterListProp
             >
               <ChevronLeft size={20} />
             </Button>
-            <h1 className="flex-1 text-center text-xs font-bold text-slate-900 uppercase tracking-[0.2em]">Learning Path</h1>
+            <h1 className="flex-1 text-center text-sm font-bold text-slate-900">학습 로드맵</h1>
             <div className="h-9 w-9" />
           </div>
 
@@ -133,15 +129,13 @@ export default function ChapterList({ onBack, onSelectChapter }: ChapterListProp
           </div>
         </div>
 
-        {/* ── Scrollable path ───────────────────── */}
         <section className="hide-scrollbar flex-1 overflow-y-auto px-6 pb-32 pt-40">
           
-          {/* Progress Section */}
           <div className="mb-14 rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
             <div className="flex items-end justify-between mb-3">
               <div>
-                <p className="text-xs font-bold text-slate-300 uppercase tracking-widest mb-1">Topic</p>
                 <h2 className="text-xl font-bold text-slate-900 tracking-tight">{category.categoryName}</h2>
+                <p className="text-xs font-medium text-slate-400 mt-1">{category.tagline}</p>
               </div>
               <span className="text-2xl font-bold text-slate-900 leading-none">{progressPercent}%</span>
             </div>
@@ -155,7 +149,6 @@ export default function ChapterList({ onBack, onSelectChapter }: ChapterListProp
             </div>
           </div>
 
-          {/* Roadmap Path */}
           <div className="relative flex flex-col items-center gap-16">
             <div className="absolute top-8 bottom-8 w-1 bg-slate-50 rounded-full" />
             
@@ -169,14 +162,13 @@ export default function ChapterList({ onBack, onSelectChapter }: ChapterListProp
             ))}
             
             <div className="mt-12 text-center">
-               <div className="inline-block rounded-xl border border-dashed border-slate-200 bg-slate-50 px-6 py-3 text-xs font-bold text-slate-300 uppercase tracking-wider">
-                 Next stages coming soon
+               <div className="inline-block rounded-xl border border-dashed border-slate-200 bg-slate-50 px-6 py-3 text-xs font-bold text-slate-300">
+                 다음 단계를 준비 중이에요
                </div>
             </div>
           </div>
         </section>
 
-        {/* ── Bottom nav ───────────────────────────── */}
         <DashboardBottomNav tabs={LEARNING_TABS} />
       </div>
     </main>

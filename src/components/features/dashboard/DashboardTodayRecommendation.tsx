@@ -26,10 +26,10 @@ export default function DashboardTodayRecommendation({
       >
         <div className="flex flex-col gap-5">
           <div className="flex items-center justify-between">
-            <span className="inline-block rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white uppercase tracking-tighter">
-              Featured Pick
+            <span className="inline-block rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white">
+              추천 학습
             </span>
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{first.category}</span>
+            <span className="text-xs font-bold text-slate-400">{first.category}</span>
           </div>
           
           <h4 className="text-xl font-bold text-slate-900 leading-tight tracking-tight">
@@ -38,7 +38,6 @@ export default function DashboardTodayRecommendation({
           
           <div className="mt-3 flex items-center justify-between border-t border-slate-50 pt-5">
             <div className="flex flex-col">
-              <p className="text-xs font-bold text-slate-300 uppercase tracking-widest mb-1">Duration</p>
               <p className="text-sm font-bold text-slate-500">약 5분 소요</p>
             </div>
             <Button size="icon" variant="secondary" className="h-12 w-12 rounded-full bg-slate-50 text-slate-900 group-hover:bg-slate-900 group-hover:text-white transition-all shadow-md active:scale-90">

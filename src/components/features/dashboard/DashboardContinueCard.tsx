@@ -20,12 +20,11 @@ export default function DashboardContinueCard({
     <article className="rounded-[32px] border-2 border-slate-100 bg-slate-50/50 p-6 shadow-sm">
       <div className="flex items-center justify-between mb-4 px-1">
         <h3 className="text-base font-bold text-slate-900 tracking-tight">{headline}</h3>
-        <span className="text-xs font-bold text-slate-400 uppercase tracking-tighter">KEEP GOING</span>
       </div>
 
       <div className="flex items-center justify-between rounded-2xl border-2 border-slate-100 bg-white p-4 shadow-inner">
         <div className="space-y-1.5">
-          <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">{category}</p>
+          <p className="text-xs font-bold text-slate-400">{category}</p>
           <p className="text-base font-bold text-slate-900 leading-tight">{lessonTitle}</p>
           <p className="text-xs font-medium text-slate-500">{meta}</p>
         </div>
@@ -40,7 +39,6 @@ export default function DashboardContinueCard({
         </Button>
       </div>
       
-      {/* Subtle progress indicator */}
       <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-slate-200/50 px-1">
          <div className="h-full rounded-full bg-slate-900 w-[68%]" />
       </div>
