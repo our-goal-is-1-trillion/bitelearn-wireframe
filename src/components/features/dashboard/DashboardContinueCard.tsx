@@ -1,4 +1,4 @@
-import { ChevronRight, Play } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 type DashboardContinueCardProps = {

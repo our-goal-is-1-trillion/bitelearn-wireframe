@@ -33,6 +33,10 @@ export default function MistakeCard({
           <CalendarDays size={12} />
           {dateText}
         </span>
+        <span className="flex items-center gap-1 text-[11px] text-slate-400">
+          <Clock3 size={12} />
+          {timeText}
+        </span>
         <button
           type="button"
           onClick={onRetry}
