@@ -1,8 +1,9 @@
 import { useState } from "react"
-import { motion } from "framer-motion"
-import { FileText, House, GraduationCap, BookOpenCheck, UserRound, ArrowRight, Clock, ChevronRight } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { FileText, House, GraduationCap, BookOpenCheck, UserRound, ArrowRight, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import DashboardBottomNav from "@/components/layout/DashboardBottomNav"
+import ArticleCard from "@/components/features/article/ArticleCard"
 import { mockArticles, ARTICLE_CATEGORIES } from "@/data/mock/article"
 import type { ArticleDetail, ArticleCategory } from "@/data/mock/article"
 
@@ -19,7 +20,7 @@ const BOTTOM_TABS = [
   { label: "마이", icon: UserRound, active: false },
 ]
 
-// ─── Thumbnail (Lo-fi Wireframe) ──────────────────────────
+// ─── Thumbnail (Shared Logic Helper) ───────────────────────
 function ArticleThumb({ category }: { category: string }) {
   return (
     <div className="flex h-full w-full items-center justify-center bg-slate-50 border-b border-slate-100">
@@ -67,32 +68,6 @@ function HeroArticleCard({ article, onSelect }: { article: ArticleDetail; onSele
   )
 }
 
-// ─── Standard Article Card (Relaxed) ───────────────────────
-function RelaxedArticleCard({ article, onSelect }: { article: ArticleDetail; onSelect: () => void }) {
-  return (
-    <button
-      onClick={onSelect}
-      className="group flex w-full flex-col gap-4 rounded-[28px] border-2 border-slate-100 bg-white p-5 transition-all hover:border-slate-300 active:scale-[0.98] text-left"
-    >
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1 space-y-2">
-          <p className="text-[10px] font-bold text-slate-400">{article.category}</p>
-          <h3 className="text-base font-bold leading-snug text-slate-900 line-clamp-2 italic">
-            "{article.title}"
-          </h3>
-        </div>
-        <div className="h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center grayscale opacity-60">
-           <FileText size={24} className="text-slate-300" />
-        </div>
-      </div>
-      <div className="flex items-center justify-between pt-2 border-t border-slate-50">
-         <span className="text-xs font-bold text-slate-300">잠시 짬내서 읽어보기</span>
-         <ChevronRight size={14} className="text-slate-200" />
-      </div>
-    </button>
-  )
-}
-
 // ─── Main Component ──────────────────────────────────────────
 export default function ArticleList({ onSelectArticle, onTabClick }: ArticleListProps) {
   const [selectedCategory, setSelectedCategory] = useState<ArticleCategory>("전체")
@@ -107,7 +82,6 @@ export default function ArticleList({ onSelectArticle, onTabClick }: ArticleList
   return (
     <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900 flex flex-col border border-slate-200 shadow-xl">
       
-      {/* ── Fixed Header ────────────────────────── */}
       <header className="shrink-0 bg-white border-b border-slate-50 px-6 pt-12 pb-6">
         <div className="flex items-end justify-between mb-8">
           <div>
@@ -119,7 +93,6 @@ export default function ArticleList({ onSelectArticle, onTabClick }: ArticleList
           </div>
         </div>
 
-        {/* Category Filters (Lo-fi style) */}
         <div className="hide-scrollbar -mx-2 flex gap-2 overflow-x-auto px-2">
           {ARTICLE_CATEGORIES.map((cat) => (
             <Button
@@ -138,34 +111,28 @@ export default function ArticleList({ onSelectArticle, onTabClick }: ArticleList
         </div>
       </header>
 
-      {/* ── Scrollable List ───────────────────── */}
       <section className="hide-scrollbar flex-1 overflow-y-auto px-6 py-10 pb-32 bg-[radial-gradient(#f8fafc_2px,transparent_2px)] [background-size:24px_24px]">
         
         <div className="flex flex-col gap-12">
           {filtered.length > 0 ? (
             <>
-              {/* Highlight Card */}
               {heroArticle && (
-                <div className="space-y-4">
-                  <HeroArticleCard 
-                    article={heroArticle} 
-                    onSelect={() => onSelectArticle(heroArticle.articleId)} 
-                  />
-                </div>
+                <HeroArticleCard 
+                  article={heroArticle} 
+                  onSelect={() => onSelectArticle(heroArticle.articleId)} 
+                />
               )}
 
-              {/* Other Cards */}
               {otherArticles.length > 0 && (
-                <div className="space-y-10">
-                  <div className="flex flex-col gap-8">
-                    {otherArticles.map((article) => (
-                      <RelaxedArticleCard 
-                        key={article.articleId} 
-                        article={article} 
-                        onSelect={() => onSelectArticle(article.articleId)} 
-                      />
-                    ))}
-                  </div>
+                <div className="flex flex-col gap-8">
+                  {otherArticles.map((article) => (
+                    <ArticleCard 
+                      key={article.articleId} 
+                      article={article} 
+                      onSelect={onSelectArticle}
+                      variant="relaxed"
+                    />
+                  ))}
                 </div>
               )}
             </>
@@ -183,7 +150,6 @@ export default function ArticleList({ onSelectArticle, onTabClick }: ArticleList
         </div>
       </section>
 
-      {/* ── Bottom nav ───────────────────── */}
       <DashboardBottomNav tabs={BOTTOM_TABS} onTabClick={onTabClick} />
     </main>
   )

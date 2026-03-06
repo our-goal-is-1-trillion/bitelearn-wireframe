@@ -144,7 +144,7 @@ export default function LearningNote({ onTabClick }: { onTabClick: (label: strin
                 
                 <div className="flex flex-col gap-6">
                   {filteredMistakes.length > 0 ? (
-                    filteredMistakes.map((item, idx) => (
+                    filteredMistakes.map((item) => (
                       <MistakeCard
                         key={item.id}
                         categoryLabel={MOCK_CATEGORY_CHAPTERS.find(c => c.categoryId === item.categoryId)?.categoryName || "미분류"}

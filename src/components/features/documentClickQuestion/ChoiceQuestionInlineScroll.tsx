@@ -141,9 +141,10 @@ export default function ChoiceQuestionInlineScroll({ onComplete }: ChoiceQuestio
           <div className="absolute inset-x-0 bottom-0 top-14 bg-white z-30">
             <ChoiceQuestionResult
               isCorrect={isCorrect}
-              correctAnswerText={currentQuestion.choices[currentQuestion.correctIndex]}
-              selectedAnswerText={selectedChoice !== "" ? currentQuestion.choices[Number(selectedChoice)] : ""}
               explanation={currentQuestion.explanation}
+              documentCard={currentQuestion.documentCard}
+              correctIndex={currentQuestion.correctIndex}
+              selectedAnswerIndex={selectedChoice !== "" ? Number(selectedChoice) : undefined}
               characterImageUrl={isCorrect ? currentQuestion.characterCorrectImageUrl : currentQuestion.characterIncorrectImageUrl}
               isLastQuestion={isLastQuestion}
               onNext={handleNextQuestion}

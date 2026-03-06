@@ -26,6 +26,7 @@ import Mypage from "@/pages/Mypage"
 import ArticleDetail from "@/components/features/article/ArticleDetail"
 import ArticleList from "@/components/features/article/ArticleList"
 import { MOCK_CHOICE_QUESTION_SET } from "@/data/mock/choiceQuestion"
+import { mockArticles } from "@/data/mock/article"
 import ChapterList from "@/components/features/chapter/ChapterList"
 import LearningNote from "@/pages/LearningNote"
 import LearningHome from "@/components/features/chapter/LearningHome"
@@ -208,15 +209,16 @@ export default function App() {
       case "resultFail":
         return <Result resultData={null} variant="fail" onFinish={() => handleNavigate("home")} />
 
-
       case "dashBoard":
         return (
           <DashboardHome
             tabs={DASHBOARD_TABS.map(t => ({ ...t, active: t.label === "홈" }))}
             categories={DASHBOARD_CATEGORIES}
             recommendations={DASHBOARD_TODAY_RECOMMENDATIONS}
+            articles={mockArticles}
             onMoveToChapter={() => handleNavigate("learningHome")}
             onMoveToLogin={() => handleNavigate("login")}
+            onMoveToArticle={(id) => handleNavigate("article")}
             onTabClick={handleTabClick}
             headerTitle="BiteLearn"
             headerSubtitle="로그인하고 맞춤 학습을 시작해보세요."
@@ -262,19 +264,8 @@ export default function App() {
           <ChapterList
             initialCategoryId={selectedCategoryId}
             onBack={() => handleNavigate("learningHome")}
-            onSelectChapter={() => handleNavigate("chapterPlayer")}
+            onSelectChapter={() => handleNavigate("home")}
             onTabClick={handleTabClick}
-          />
-        )
-
-      case "chapterPlayer":
-        return (
-          <ChapterPlayer
-            onBack={() => handleNavigate("chapterList")}
-            onComplete={(total, correct) => {
-              setQuizResult({ total, correct })
-              handleNavigate("result")
-            }}
           />
         )
 

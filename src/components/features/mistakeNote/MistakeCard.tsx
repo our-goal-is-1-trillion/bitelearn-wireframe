@@ -1,4 +1,4 @@
-import { CalendarDays, ChevronRight, Clock3, RotateCcw } from "lucide-react"
+import { CalendarDays, Clock3, RotateCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 type MistakeCardProps = {
