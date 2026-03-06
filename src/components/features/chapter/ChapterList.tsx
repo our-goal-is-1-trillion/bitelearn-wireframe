@@ -1,13 +1,12 @@
 import { useState } from "react"
-import { motion } from "framer-motion"
-import { ChevronLeft, Check, Lock, GraduationCap, House, BookOpenCheck, FileText, UserRound } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { ChevronLeft, ChevronRight, Check, Lock, GraduationCap, House, BookOpenCheck, FileText, UserRound } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import DashboardBottomNav from "@/components/layout/DashboardBottomNav"
 import { MOCK_CATEGORY_CHAPTERS } from "@/data/mock/chapter"
 import type { Chapter } from "@/data/mock/chapter"
 
 type ChapterListProps = {
-  onBack: () => void
   onSelectChapter: (chapterId: string) => void
 }
 
@@ -87,7 +86,7 @@ function StageNode({
 }
 
 // ─── Main component ────────────────────────────────────────────
-export default function ChapterList({ onBack, onSelectChapter }: ChapterListProps) {
+export default function ChapterList({ onSelectChapter }: ChapterListProps) {
   const [selectedCategoryId, setSelectedCategoryId] = useState("real-estate")
 
   const category = MOCK_CATEGORY_CHAPTERS.find((c) => c.categoryId === selectedCategoryId)!
