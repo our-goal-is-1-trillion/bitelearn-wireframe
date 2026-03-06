@@ -1,27 +1,58 @@
+/** 
+ * 챕터(스테이지)의 학습 진행 상태 
+ * - completed: 학습 완료 (체크 표시)
+ * - in_progress: 학습 중 (현재 진행 중인 가장 빠른 단계)
+ * - available: 학습 가능 (잠금 해제되었으나 아직 시작 안 함)
+ * - locked: 잠금 상태 (이전 단계 완료 필요)
+ */
 export type ChapterStatus = "completed" | "in_progress" | "available" | "locked"
 
+/** 로드맵 상의 개별 학습 스테이지(챕터) 데이터 인터페이스 */
 export interface Chapter {
+  /** 고유 ID */
   id: string
+  /** 스테이지 순서 번호 */
   stageNumber: number
+  /** 스테이지 대표 이모지 */
   emoji: string
+  /** 챕터 제목 */
   title: string
+  /** 챕터 부제 또는 한 줄 설명 */
   subtitle: string
+  /** 현재 학습 상태 */
   status: ChapterStatus
+  /** 학습 진행률 (0~100, in_progress 상태일 때 주로 사용) */
   progress?: number
+  /** 예상 소요 시간 (분 단위) */
   estimatedMinutes: number
+  /** 포함된 문제 수 */
   questionCount: number
 }
 
+/** 학습 카테고리(도메인) 및 해당 도메인의 챕터 목록 */
 export interface CategoryChapters {
+  /** 카테고리 고유 ID */
   categoryId: string
+  /** 카테고리 명 (예: 부동산 · 주거) */
   categoryName: string
+  /** 카테고리 대표 이모지 */
   emoji: string
+  /** 카테고리 캐치프레이즈 (태그라인) */
   tagline: string
+  /** 해당 카테고리의 전체 챕터 수 */
   totalChapters: number
+  /** 현재까지 완료한 챕터 수 */
   completedChapters: number
+  /** 소속된 챕터(스테이지) 목록 */
   chapters: Chapter[]
 }
 
+// ─── Mock Data ──────────────────────────────────────────────
+
+/** 
+ * 바이트런 학습 로드맵 모크 데이터 
+ * 각 도메인별(부동산, 금융, 커리어 등) 학습 경로와 스테이지 정보를 포함합니다.
+ */
 export const MOCK_CATEGORY_CHAPTERS: CategoryChapters[] = [
   {
     categoryId: "real-estate",

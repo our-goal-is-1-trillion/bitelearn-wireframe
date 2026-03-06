@@ -5,7 +5,6 @@ import ChoiceQuestionIndicator, { type StepIndicatorInfo } from "./ChoiceQuestio
 import ChoiceQuestionImage from "./ChoiceQuestionImage"
 import ChoiceQuestionPassage from "./ChoiceQuestionPassage"
 import ChoiceQuestionChoices from "./ChoiceQuestionChoices"
-import ChoiceQuestionOXChoices from "./ChoiceQuestionOXChoices"
 import ChoiceQuestionResult from "./ChoiceQuestionResult"
 import { MOCK_CHOICE_QUESTION_SET } from "@/data/mock/choiceQuestion"
 
@@ -16,10 +15,10 @@ type DocumentChoiceQuestionProps = {
 }
 
 function getQuizTypeLabel() {
-  return "서류 오답 찾기 퀴즈"
+  return "서류 정밀 검토"
 }
 
-export default function DocumentChoiceQuestion({ onComplete }: DocumentChoiceQuestionProps) {
+export default function DocumentClickQuestion({ onComplete }: DocumentChoiceQuestionProps) {
   const quizQuestions = MOCK_CHOICE_QUESTION_SET.questions.filter(
     (q) => q.type === "quiz" && q.choiceMode === "document_select"
   )
@@ -57,13 +56,19 @@ export default function DocumentChoiceQuestion({ onComplete }: DocumentChoiceQue
 
     const correct = Number(resolvedChoice) === currentQuestion.correctIndex
     setSelectedChoice(resolvedChoice)
+    
+    // UX Improvement: Start scanning phase
     setPhase("checking")
-    setMetrics((prev) => {
-      const next = [...prev]
-      next[currentIndex] = correct ? "correct" : "incorrect"
-      return next
-    })
-    setTimeout(() => setPhase("result"), 1400)
+    
+    // Delay transition to result to show scanning animation
+    setTimeout(() => {
+      setMetrics((prev) => {
+        const next = [...prev]
+        next[currentIndex] = correct ? "correct" : "incorrect"
+        return next
+      })
+      setPhase("result")
+    }, 2400) // Give enough time for scan bar to move
   }
 
   const handleNextQuestion = () => {
@@ -124,45 +129,33 @@ export default function DocumentChoiceQuestion({ onComplete }: DocumentChoiceQue
                 onSolve={() => {}}
                 hideSolveButton
               />
-              <QuizFooter
-                disabled={selectedChoice === "" || phase === "checking"}
-                previousDisabled={phase === "checking"}
-                onClick={handleCheckAnswer}
-                onPrevious={() => setPhase("passage")}
-              >
-                정답 확인
-              </QuizFooter>
+              <div className="absolute inset-x-0 bottom-0 p-6 bg-white border-t border-slate-100 z-30">
+                <button
+                  disabled={selectedChoice === "" || phase === "checking"}
+                  onClick={() => handleCheckAnswer()}
+                  className={`w-full h-14 rounded-2xl font-bold text-lg transition-all active:scale-95 shadow-xl ${
+                    phase === "checking" 
+                      ? "bg-slate-100 text-slate-400 cursor-not-allowed" 
+                      : "bg-slate-900 text-white shadow-slate-200"
+                  }`}
+                >
+                  {phase === "checking" ? "서류 스캔 중..." : "정답 확인하기"}
+                </button>
+                {phase !== "checking" && (
+                  <button 
+                    onClick={() => setPhase("passage")}
+                    className="w-full mt-4 text-xs font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-colors"
+                  >
+                    이전으로
+                  </button>
+                )}
+              </div>
             </>
           )
         }
 
-        if (choiceMode === "ox") {
-          return (
-            <ChoiceQuestionOXChoices
-              questionNumber={currentIndex + 1}
-              question={currentQuestion.question}
-              correctIndex={currentQuestion.correctIndex}
-              onCheckAnswer={handleCheckAnswer}
-              isChecking={phase === "checking"}
-              onPrevious={() => setPhase("passage")}
-            />
-          )
-        }
-
-        return (
-          <ChoiceQuestionChoices
-            questionNumber={currentIndex + 1}
-            question={currentQuestion.question}
-            choices={currentQuestion.choices}
-            choiceMode={choiceMode as "multiple" | "document_select"}
-            selectedValue={selectedChoice}
-            onSelectChoice={setSelectedChoice}
-            onCheckAnswer={handleCheckAnswer}
-            isChecking={phase === "checking"}
-            correctIndex={currentQuestion.correctIndex}
-            onPrevious={() => setPhase("passage")}
-          />
-        )
+        // Fallback for other modes if any
+        return null
       case "result":
         return (
           <ChoiceQuestionResult
@@ -170,10 +163,11 @@ export default function DocumentChoiceQuestion({ onComplete }: DocumentChoiceQue
             explanation={currentQuestion.explanation}
             documentCard={currentQuestion.documentCard}
             correctIndex={currentQuestion.correctIndex}
+            selectedAnswerIndex={selectedChoice !== "" ? Number(selectedChoice) : undefined}
             characterImageUrl={
               isCorrect
-                ? currentQuestion.characterCorrectImageUrl
-                : currentQuestion.characterIncorrectImageUrl
+                ? (currentQuestion.characterCorrectImageUrl || "/images/result/dog_perfect.png")
+                : (currentQuestion.characterIncorrectImageUrl || "/images/result/dog_fail.png")
             }
             isLastQuestion={isLastQuestion}
             onNext={handleNextQuestion}
@@ -187,18 +181,15 @@ export default function DocumentChoiceQuestion({ onComplete }: DocumentChoiceQue
       ref={screenRef}
       className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900"
     >
-      <div className="relative flex h-full flex-col border border-slate-200 pt-14">
+      <div className="relative flex h-full flex-col border border-slate-200 pt-14 pb-32">
         <div className="absolute inset-x-0 top-0 z-20 bg-white">
           <QuizHeader title={getQuizTypeLabel()} showCloseButton={false} />
         </div>
 
         {phase !== "result" && (
-          <>
+          <div className="px-6 py-2">
             <ChoiceQuestionIndicator steps={indicatorSteps} />
-            {currentQuestion.imageUrl ? (
-              <ChoiceQuestionImage src={currentQuestion.imageUrl} alt={currentQuestion.imageAlt} />
-            ) : null}
-          </>
+          </div>
         )}
 
         {renderPhaseContent()}

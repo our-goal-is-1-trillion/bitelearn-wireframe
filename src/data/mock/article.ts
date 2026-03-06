@@ -1,39 +1,86 @@
+/** 
+ * 아티클 상세 본문을 구성하는 블록 타입 
+ * paragraph, heading, image, list, quote 등의 타입을 지원하여 
+ * 다양한 형태의 아티클 레이아웃을 구성할 수 있습니다.
+ */
 export type ContentBlock =
-  | { type: "paragraph"; content: string }
-  | { type: "heading"; level: number; content: string }
-  | { type: "image"; url: string; altText: string; caption?: string }
-  | { type: "list"; listType: "unordered" | "ordered"; items: string[] }
-  | { type: "quote"; content: string }
+  | { 
+      /** 일반 텍스트 문단 */
+      type: "paragraph"; 
+      content: string 
+    }
+  | { 
+      /** 섹션 제목 (level 2 or 3) */
+      type: "heading"; 
+      level: number; 
+      content: string 
+    }
+  | { 
+      /** 본문 삽입 이미지 */
+      type: "image"; 
+      url: string; 
+      altText: string; 
+      /** 이미지 하단 설명 텍스트 */
+      caption?: string 
+    }
+  | { 
+      /** 리스트 형태 (순서 있음/없음) */
+      type: "list"; 
+      listType: "unordered" | "ordered"; 
+      items: string[] 
+    }
+  | { 
+      /** 인용구 블록 */
+      type: "quote"; 
+      content: string 
+    }
 
+/** 아티클 상세 데이터 인터페이스 */
 export interface ArticleDetail {
+  /** 아티클 고유 ID */
   articleId: string
+  /** 카테고리 명 (예: 부동산/주거) */
   category: string
+  /** 아티클 제목 */
   title: string
+  /** 목록 및 상세 상단 커버 이미지 URL */
   thumbnailUrl: string
+  /** 작성자(에디터) 정보 */
   author: {
     name: string
     role: string
     profileImageUrl: string
   }
+  /** 발행 일시 (ISO 형식) */
   publishedAt: string
+  /** 조회수 */
   viewCount: number
+  /** 관련 태그 목록 */
   tags: string[]
+  /** 아티클 상단 3줄 요약 정보 */
   summary: {
     title: string
     points: string[]
   }
+  /** 본문 콘텐츠 블록 배열 */
   contentBlocks: ContentBlock[]
-  faqs: {
-    question: string
-    answer: string
-  }[]
+  /** 하단 플로팅 버튼(CTA) 정보 */
   callToAction: {
+    /** 버튼 문구 */
     text: string
+    /** 이동할 URL */
     url: string
+    /** 버튼 스타일 (강조 여부) */
     style: "primary" | "secondary"
   }
 }
 
+// ─── Mock Data ──────────────────────────────────────────────
+
+/** 
+ * [샘플 아티클] 전세사기 방지 체크리스트 
+ * 바이트런 앱의 아티클 상세 화면 시연을 위한 모크 데이터입니다.
+ */
 export const mockArticles: ArticleDetail[] = [
   {
     articleId: "article-2026-001",
@@ -88,12 +135,6 @@ export const mockArticles: ArticleDetail[] = [
       {
         type: "quote",
         content: "1. \"전세보증금 반환보증보험 가입 불가 시, 본 계약은 무효로 하고 계약금 전액을 즉시 반환한다.\"\n2. \"임대인은 잔금 지급일 다음 날까지 현재의 권리 상태를 유지한다.\"\n3. \"계약 기간 중 임대인이 변경될 경우, 사전에 임차인에게 통지한다.\"",
-      },
-    ],
-    faqs: [
-      {
-        question: "등기부등본은 계약할 때 한 번만 떼보면 되나요?",
-        answer: "**🙅🏻 아니요!** 등기부등본은 ① 계약 전, ② 중도금 낼 때, ③ 잔금 치르기 전, ④ 전입신고 직전 최소 4번은 확인해야 해요. 그 짧은 시간 사이에 집주인이 대출을 받을 수도 있거든요.",
       },
     ],
     callToAction: {
