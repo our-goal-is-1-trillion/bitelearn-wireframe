@@ -6,7 +6,6 @@ import { MOCK_CATEGORY_CHAPTERS } from "@/data/mock/chapter"
 import type { CategoryChapters } from "@/data/mock/chapter"
 
 type LearningHomeProps = {
-  onBack: () => void
   onSelectCategory: (categoryId: string) => void
 }
 
@@ -88,7 +87,7 @@ function CategoryCard({
   )
 }
 
-export default function LearningHome({ onBack, onSelectCategory }: LearningHomeProps) {
+export default function LearningHome({ onSelectCategory }: LearningHomeProps) {
   const totalDomains = MOCK_CATEGORY_CHAPTERS.length
   const startedDomains = MOCK_CATEGORY_CHAPTERS.filter((c) => c.completedChapters > 0).length
 

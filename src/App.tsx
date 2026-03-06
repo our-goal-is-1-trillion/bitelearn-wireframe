@@ -225,7 +225,6 @@ export default function App() {
       case "learningHome":
         return (
           <LearningHome
-            onBack={() => handleNavigate("home")}
             onSelectCategory={(id) => {
               setSelectedCategoryId(id)
               handleNavigate("chapterList")

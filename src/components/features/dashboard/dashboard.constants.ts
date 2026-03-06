@@ -10,10 +10,10 @@ export const DASHBOARD_TABS: DashboardTab[] = [
 ]
 
 export const DASHBOARD_CATEGORIES: DashboardCategory[] = [
-  { name: "부동산 · 주거", lessons: 12, percent: 72 },
-  { name: "생활금융 · 고용", lessons: 8, percent: 38 },
-  { name: "커리어 · 세무", lessons: 15, percent: 84 },
-  { name: "자산운용 · 투자", lessons: 15, percent: 84 },
+  { emoji: "🏠", name: "부동산 · 주거", lessons: 12, percent: 72 },
+  { emoji: "💳", name: "생활금융 · 고용", lessons: 8, percent: 38 },
+  { emoji: "💼", name: "커리어 · 세무", lessons: 15, percent: 84 },
+  { emoji: "📈", name: "자산운용 · 투자", lessons: 15, percent: 84 },
 ]
 
 export const DASHBOARD_TODAY_RECOMMENDATIONS: DashboardRecommendation[] = [
