@@ -51,7 +51,7 @@ function CategoryCard({
               <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                 Domain {String(index + 1).padStart(2, "0")}
               </p>
-              <h3 className="text-base font-bold text-slate-900 leading-tight">{cat.categoryName}</h3>
+              <h3 className="text-lg font-bold text-slate-900 leading-tight">{cat.categoryName}</h3>
               <p className="mt-1 text-sm text-slate-500 font-medium">{cat.tagline}</p>
             </div>
           </div>
@@ -69,7 +69,7 @@ function CategoryCard({
             <span className="text-xs font-bold text-slate-400 uppercase tracking-tighter">
               {cat.completedChapters} / {cat.totalChapters} CHAPTERS
             </span>
-            <span className="text-sm font-black text-slate-900">
+            <span className="text-sm font-bold text-slate-900">
               {progress}%
             </span>
           </div>
@@ -106,11 +106,11 @@ export default function LearningHome({ onBack, onSelectCategory }: LearningHomeP
           <div className="flex items-end justify-between">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400 mb-1.5">Knowledge Tree</p>
-              <h1 className="text-2xl font-black text-slate-900 tracking-tight">학습 도메인</h1>
+              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">학습 도메인</h1>
             </div>
             <div className="text-right">
               <p className="text-xs font-bold text-slate-300 leading-none mb-1">STARTED</p>
-              <span className="text-2xl font-black text-slate-900 leading-none">
+              <span className="text-2xl font-bold text-slate-900 leading-none">
                 {startedDomains}<span className="text-slate-100 mx-1">/</span>{totalDomains}
               </span>
             </div>

@@ -141,9 +141,9 @@ export default function ChapterList({ onBack, onSelectChapter }: ChapterListProp
             <div className="flex items-end justify-between mb-3">
               <div>
                 <p className="text-xs font-bold text-slate-300 uppercase tracking-widest mb-1">Topic</p>
-                <h2 className="text-xl font-black text-slate-900 tracking-tight">{category.categoryName}</h2>
+                <h2 className="text-xl font-bold text-slate-900 tracking-tight">{category.categoryName}</h2>
               </div>
-              <span className="text-2xl font-black text-slate-900 leading-none">{progressPercent}%</span>
+              <span className="text-2xl font-bold text-slate-900 leading-none">{progressPercent}%</span>
             </div>
             <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
               <motion.div

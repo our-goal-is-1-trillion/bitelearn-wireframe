@@ -1,4 +1,4 @@
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 type DashboardContinueCardProps = {
@@ -11,29 +11,38 @@ type DashboardContinueCardProps = {
 
 export default function DashboardContinueCard({
   onContinue,
-  headline = "이어서 학습해보세요! 🚩",
+  headline = "학습을 이어가볼까요? 🚩",
   category = "부동산 · 주거",
-  lessonTitle = "전세사기 예방",
-  meta = "완료율 68%",
+  lessonTitle = "전세사기 예방 기초",
+  meta = "현재 완료율 68%",
 }: DashboardContinueCardProps) {
   return (
-    <article className="rounded-2xl border border-indigo-100 bg-indigo-50/50 px-4 py-4 shadow-sm">
-      <p className="py-1 text-base font-bold text-slate-900">{headline}</p>
+    <article className="rounded-[32px] border-2 border-slate-100 bg-slate-50/50 p-6 shadow-sm">
+      <div className="flex items-center justify-between mb-4 px-1">
+        <h3 className="text-base font-bold text-slate-900 tracking-tight">{headline}</h3>
+        <span className="text-xs font-bold text-slate-400 uppercase tracking-tighter">KEEP GOING</span>
+      </div>
 
-      <div className="mt-2 flex items-center justify-between rounded-xl bg-white px-3 py-3">
-        <div className="space-y-1">
-          <p className="text-xs text-slate-500">{category}</p>
-          <p className="text-sm font-bold text-slate-900">{lessonTitle}</p>
-          <p className="text-xs text-slate-500">{meta}</p>
+      <div className="flex items-center justify-between rounded-2xl border-2 border-slate-100 bg-white p-4 shadow-inner">
+        <div className="space-y-1.5">
+          <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">{category}</p>
+          <p className="text-base font-bold text-slate-900 leading-tight">{lessonTitle}</p>
+          <p className="text-xs font-medium text-slate-500">{meta}</p>
         </div>
         <Button
           size="icon"
-          className="h-9 w-9 rounded-full bg-indigo-600 text-white hover:bg-indigo-700"
+          variant="default"
+          className="h-12 w-12 rounded-full bg-slate-900 text-white shadow-lg shadow-slate-200 transition-all active:scale-90"
           onClick={onContinue}
           aria-label="계속 학습하기"
         >
-          <ChevronRight className="h-4 w-4" />
+          <Play size={20} className="ml-1 fill-white" />
         </Button>
+      </div>
+      
+      {/* Subtle progress indicator */}
+      <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-slate-200/50 px-1">
+         <div className="h-full rounded-full bg-slate-900 w-[68%]" />
       </div>
     </article>
   );
