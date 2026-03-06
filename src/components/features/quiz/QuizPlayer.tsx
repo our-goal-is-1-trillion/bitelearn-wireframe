@@ -5,6 +5,7 @@ import QuizHeader from "@/components/layout/QuizHeader"
 import QuizFooter from "@/components/layout/QuizFooter"
 import ChoiceQuestionIndicator from "@/components/features/choiceQuestion/ChoiceQuestionIndicator"
 import type { StepIndicatorInfo } from "@/components/features/choiceQuestion/ChoiceQuestionIndicator"
+
 import ChoiceQuestionImage from "@/components/features/choiceQuestion/ChoiceQuestionImage"
 import ChoiceQuestionChoices from "@/components/features/choiceQuestion/ChoiceQuestionChoices"
 import ChoiceQuestionOXChoices from "@/components/features/choiceQuestion/ChoiceQuestionOXChoices"
@@ -25,6 +26,12 @@ export type QuizPlayerProps = {
   /** 닫기/뒤로 가기 콜백. 미제공 시 닫기 버튼 미표시. */
   onBack?: () => void
   onComplete: (total: number, correct: number) => void
+  /** ChapterPlayer에서 내려오는 통합 인디케이터 (미제공 시 로컬 계산) */
+  indicatorSteps?: StepIndicatorInfo[]
+  /** 현재 문제 인덱스 변경 알림 (ChapterPlayer 통합 인디케이터용) */
+  onCurrentIndexChange?: (idx: number) => void
+  /** 정오답 메트릭 변경 알림 (ChapterPlayer 통합 인디케이터용) */
+  onMetricsChange?: (metrics: ("none" | "correct" | "incorrect")[]) => void
 }
 
 function getSectionLabel(q: ChoiceQuestionItem): string {
@@ -115,7 +122,7 @@ function DocumentResultView({
 }
 
 // ── Main QuizPlayer ───────────────────────────────────────
-export default function QuizPlayer({ questions, headerTitle, onBack, onComplete }: QuizPlayerProps) {
+export default function QuizPlayer({ questions, headerTitle, onBack, onComplete, indicatorSteps: externalSteps, onCurrentIndexChange, onMetricsChange }: QuizPlayerProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [phase, setPhase] = useState<Phase>("passage")
   const [selectedChoice, setSelectedChoice] = useState("")
@@ -123,6 +130,14 @@ export default function QuizPlayer({ questions, headerTitle, onBack, onComplete 
     Array(questions.length).fill("none")
   )
   const [seenPassages, setSeenPassages] = useState<Set<number>>(new Set())
+
+  if (questions.length === 0) {
+    return (
+      <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900 flex items-center justify-center border border-slate-200">
+        <p className="text-sm text-slate-400">문제 데이터가 없습니다.</p>
+      </main>
+    )
+  }
 
   const currentQ = questions[currentIndex]
   const isLastQ = currentIndex >= questions.length - 1
@@ -135,7 +150,9 @@ export default function QuizPlayer({ questions, headerTitle, onBack, onComplete 
       onComplete(questions.length, correctCount)
       return
     }
-    setCurrentIndex((prev) => prev + 1)
+    const nextIdx = currentIndex + 1
+    setCurrentIndex(nextIdx)
+    onCurrentIndexChange?.(nextIdx)
     setPhase("passage")
     setSelectedChoice("")
   }
@@ -164,6 +181,7 @@ export default function QuizPlayer({ questions, headerTitle, onBack, onComplete 
     setMetrics((prev) => {
       const next = [...prev]
       next[currentIndex] = correct ? "correct" : "incorrect"
+      onMetricsChange?.(next)
       return next
     })
     const delay = currentQ.choiceMode === "document_select" ? 2400 : 1400
@@ -171,11 +189,12 @@ export default function QuizPlayer({ questions, headerTitle, onBack, onComplete 
   }
 
   // ── Indicator ─────────────────────────────────────────
-  const indicatorSteps: StepIndicatorInfo[] = questions.map((q, idx) => ({
+  const localSteps: StepIndicatorInfo[] = questions.map((q, idx) => ({
     type: q.type ?? "quiz",
     status: metrics[idx],
     isCurrent: idx === currentIndex,
   }))
+  const indicatorSteps = externalSteps ?? localSteps
 
   const title = headerTitle ?? getSectionLabel(currentQ)
 

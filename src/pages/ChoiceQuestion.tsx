@@ -7,7 +7,7 @@ type ChoiceQuestionProps = {
 
 export default function ChoiceQuestion({ onComplete }: ChoiceQuestionProps) {
   const questions = MOCK_CHOICE_QUESTION_SET.questions.filter(
-    (q) => q.type === "quiz" && q.passageMode !== "document" && q.choiceMode !== "document_select"
+    (q) => q.type === "quiz" && q.choiceMode === "multiple"
   )
 
   return (

@@ -1,10 +1,11 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { motion } from "framer-motion"
 import { Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import QuizPlayer from "@/components/features/quiz/QuizPlayer"
 import WordCardsPlayer from "@/components/features/quiz/WordCardsPlayer"
 import { MOCK_CHOICE_QUESTION_SET } from "@/data/mock/choiceQuestion"
+import type { StepIndicatorInfo } from "@/components/features/choiceQuestion/ChoiceQuestionIndicator"
 
 // ─── Types ──────────────────────────────────────────────────
 type ChapterPhase = "words" | "quiz" | "done"
@@ -15,9 +16,8 @@ type ChapterPlayerProps = {
 }
 
 // ─── Constants ──────────────────────────────────────────────
-const ALL_QUESTIONS = MOCK_CHOICE_QUESTION_SET.questions
-const WORD_QUESTIONS = ALL_QUESTIONS.filter((q) => q.type === "word")
-const QUIZ_QUESTIONS = ALL_QUESTIONS.filter((q) => q.type !== "word")
+const WORD_QUESTIONS = MOCK_CHOICE_QUESTION_SET.questions.filter((q) => q.type === "word")
+const QUIZ_QUESTIONS = MOCK_CHOICE_QUESTION_SET.questions.filter((q) => q.type === "quiz")
 
 // ─── Chapter Done Screen ─────────────────────────────────────
 function ChapterDoneScreen({
@@ -79,6 +79,25 @@ export default function ChapterPlayer({ onComplete, onBack }: ChapterPlayerProps
   const initialPhase: ChapterPhase = WORD_QUESTIONS.length > 0 ? "words" : "quiz"
   const [chapterPhase, setChapterPhase] = useState<ChapterPhase>(initialPhase)
   const [quizResult, setQuizResult] = useState<{ total: number; correct: number } | null>(null)
+  const [wordIdx, setWordIdx] = useState(0)
+  const [quizCurrentIndex, setQuizCurrentIndex] = useState(0)
+  const [quizMetrics, setQuizMetrics] = useState<("none" | "correct" | "incorrect")[]>(
+    Array(QUIZ_QUESTIONS.length).fill("none")
+  )
+
+  const combinedSteps: StepIndicatorInfo[] = useMemo(() => {
+    const wordSteps: StepIndicatorInfo[] = WORD_QUESTIONS.map((_, idx) => ({
+      type: "word" as const,
+      status: "none" as const,
+      isCurrent: chapterPhase === "words" && idx === wordIdx,
+    }))
+    const quizSteps: StepIndicatorInfo[] = QUIZ_QUESTIONS.map((q, idx) => ({
+      type: (q.type ?? "quiz") as StepIndicatorInfo["type"],
+      status: chapterPhase === "words" ? "none" : quizMetrics[idx],
+      isCurrent: chapterPhase === "quiz" && idx === quizCurrentIndex,
+    }))
+    return [...wordSteps, ...quizSteps]
+  }, [chapterPhase, wordIdx, quizCurrentIndex, quizMetrics])
 
   if (chapterPhase === "done" && quizResult) {
     return (
@@ -100,6 +119,9 @@ export default function ChapterPlayer({ onComplete, onBack }: ChapterPlayerProps
           setQuizResult({ total, correct })
           setChapterPhase("done")
         }}
+        indicatorSteps={combinedSteps}
+        onCurrentIndexChange={setQuizCurrentIndex}
+        onMetricsChange={setQuizMetrics}
       />
     )
   }
@@ -108,8 +130,11 @@ export default function ChapterPlayer({ onComplete, onBack }: ChapterPlayerProps
   return (
     <WordCardsPlayer
       words={WORD_QUESTIONS}
+      wordIdx={wordIdx}
+      onWordIdxChange={setWordIdx}
       onComplete={() => setChapterPhase("quiz")}
       onBack={onBack}
+      indicatorSteps={combinedSteps}
     />
   )
 }

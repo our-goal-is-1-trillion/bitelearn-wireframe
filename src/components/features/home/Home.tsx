@@ -45,8 +45,9 @@ const IA_STRUCTURE: IANode[] = [
             label: "챕터 목록 (Depth 2 · 로드맵)", 
             page: "chapterList",
             children: [
-              { label: "단어 학습 카드", page: "wordLearning" },
-              { 
+              { label: "학습 과정 Flow (전체 챕터 통합)", page: "chapterPlayer" },
+              { label: "단어 학습 카드 (단독)", page: "wordLearning" },
+              {
                 label: "퀴즈 풀이 (Depth 3)",
                 children: [
                   { label: "지문형 객관식 (A/B/C)", page: "choiceQuestion" },

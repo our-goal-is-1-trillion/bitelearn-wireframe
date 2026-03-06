@@ -30,6 +30,7 @@ import { mockArticles } from "@/data/mock/article"
 import ChapterList from "@/components/features/chapter/ChapterList"
 import LearningNote from "@/pages/LearningNote"
 import LearningHome from "@/components/features/chapter/LearningHome"
+import ChapterPlayer from "@/components/features/chapter/ChapterPlayer"
 
 export type QuizResultData = {
   total: number
@@ -62,6 +63,7 @@ export type Page =
   | "chapterList"
   | "mistakeNote"
   | "learningHome"
+  | "chapterPlayer"
 
 type TransitionStage = "idle" | "out" | "in"
 
@@ -259,8 +261,19 @@ export default function App() {
         return (
           <ChapterList
             onBack={() => handleNavigate("learningHome")}
-            onSelectChapter={() => handleNavigate("home")}
+            onSelectChapter={() => handleNavigate("chapterPlayer")}
             onTabClick={handleTabClick}
+          />
+        )
+
+      case "chapterPlayer":
+        return (
+          <ChapterPlayer
+            onBack={() => handleNavigate("chapterList")}
+            onComplete={(total, correct) => {
+              setQuizResult({ total, correct })
+              handleNavigate("result")
+            }}
           />
         )
 

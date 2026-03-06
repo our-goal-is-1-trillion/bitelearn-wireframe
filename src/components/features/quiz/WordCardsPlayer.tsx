@@ -4,16 +4,22 @@ import { MousePointerClick } from "lucide-react"
 import QuizHeader from "@/components/layout/QuizHeader"
 import QuizFooter from "@/components/layout/QuizFooter"
 import ChoiceQuestionIndicator from "@/components/features/choiceQuestion/ChoiceQuestionIndicator"
+import WordCard from "./WordCard"
 import type { StepIndicatorInfo } from "@/components/features/choiceQuestion/ChoiceQuestionIndicator"
 import type { ChoiceQuestionItem } from "@/data/mock/choiceQuestion"
 
 type WordCardsPlayerProps = {
   words: ChoiceQuestionItem[]
+  /** 외부에서 관리되는 현재 단어 인덱스 */
+  wordIdx: number
+  onWordIdxChange: (idx: number) => void
   onComplete: () => void
   onBack: () => void
+  /** ChapterPlayer에서 내려오는 통합 인디케이터 (미제공 시 로컬 계산) */
+  indicatorSteps?: StepIndicatorInfo[]
 }
 
-const slideVariants = {
+export const wordSlideVariants = {
   initial: (dir: number) => ({
     x: dir > 0 ? "110%" : "-110%",
     opacity: 0,
@@ -39,8 +45,7 @@ const slideVariants = {
   }),
 }
 
-export default function WordCardsPlayer({ words, onComplete, onBack }: WordCardsPlayerProps) {
-  const [wordIdx, setWordIdx] = useState(0)
+export default function WordCardsPlayer({ words, wordIdx, onWordIdxChange, onComplete, onBack, indicatorSteps: externalSteps }: WordCardsPlayerProps) {
   const [wordFlipped, setWordFlipped] = useState(false)
   const [wordDirection, setWordDirection] = useState(1)
 
@@ -48,106 +53,117 @@ export default function WordCardsPlayer({ words, onComplete, onBack }: WordCards
   const isFirstWord = wordIdx === 0
   const isLastWord = wordIdx >= words.length - 1
 
-  const indicatorSteps: StepIndicatorInfo[] = words.map((_, idx) => ({
+  const localSteps: StepIndicatorInfo[] = words.map((_, idx) => ({
     type: "word" as const,
     status: "none" as const,
     isCurrent: idx === wordIdx,
   }))
+  const indicatorSteps = externalSteps ?? localSteps
 
   if (!currentWord) {
     return (
-      <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900 flex items-center justify-center border border-slate-200">
+      <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900 flex items-center justify-center border border-slate-200 shadow-2xl">
         <p className="text-sm text-slate-400">표시할 단어가 없습니다.</p>
       </main>
     )
   }
 
+  const handleNext = () => {
+    if (isLastWord) {
+      onComplete()
+      return
+    }
+    setWordDirection(1)
+    onWordIdxChange(wordIdx + 1)
+    setWordFlipped(false)
+  }
+
+  const handlePrev = () => {
+    if (isFirstWord) return
+    setWordDirection(-1)
+    onWordIdxChange(wordIdx - 1)
+    setWordFlipped(false)
+  }
+
   return (
-    <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900">
-      <div className="relative flex h-full flex-col border border-slate-200 pt-14">
-        <div className="absolute inset-x-0 top-0 z-20 bg-white">
-          <QuizHeader title="생존 단어장" showCloseButton onCloseClick={onBack} />
-        </div>
-
+    <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-slate-50 text-slate-900 flex flex-col border border-slate-200 shadow-xl">
+      {/* 헤더 */}
+      <div className="shrink-0 bg-white z-20">
+        <QuizHeader title="생존 단어장" showCloseButton onCloseClick={onBack} />
+      </div>
+      
+      {/* 인디케이터 */}
+      <div className="shrink-0 bg-white border-b border-slate-200 shadow-sm">
         <ChoiceQuestionIndicator steps={indicatorSteps} />
+      </div>
 
-        <div className="flex-1 flex flex-col items-center justify-center px-6 pb-4 overflow-hidden">
-          <AnimatePresence mode="wait" initial={false} custom={wordDirection}>
-            <motion.div
-              key={wordIdx}
-              custom={wordDirection}
-              variants={slideVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="w-full max-w-[310px] perspective-1000 h-[460px]"
-            >
-              <motion.div
-                className="w-full h-full relative preserve-3d cursor-pointer rounded-2xl shadow-md"
-                animate={{ rotateY: wordFlipped ? 180 : 0 }}
-                transition={{ type: "spring", stiffness: 260, damping: 20 }}
-                onClick={() => setWordFlipped(!wordFlipped)}
-              >
-                {/* Front */}
-                <div className="absolute inset-0 backface-hidden flex flex-col bg-white rounded-2xl border border-slate-200 overflow-hidden">
-                  <div className="flex-1 bg-slate-100 flex items-center justify-center overflow-hidden">
-                    {currentWord.imageUrl ? (
-                      <img
-                        src={currentWord.imageUrl}
-                        alt={currentWord.imageAlt}
-                        className="w-full h-full object-cover grayscale opacity-90"
-                      />
-                    ) : (
-                      <span className="text-5xl opacity-30">📖</span>
-                    )}
-                  </div>
-                  <div className="shrink-0 flex flex-col items-center p-6 text-center bg-white border-t border-slate-100">
-                    <div className="mb-2 bg-slate-100 px-3 py-1 rounded-full">
-                      <span className="text-[11px] font-bold text-slate-500">{currentWord.flavorText}</span>
-                    </div>
-                    <h2 className="text-lg font-bold text-slate-800 mb-4">{currentWord.choices[0]}</h2>
-                    <div className="flex items-center gap-1.5 text-slate-400">
-                      <MousePointerClick size={13} />
-                      <span className="text-xs font-medium">터치해서 의미 확인</span>
-                    </div>
-                  </div>
-                </div>
+      {/* 메인 학습 컨텐츠 */}
+      <div className="flex-1 flex flex-col items-center justify-center p-6 pb-10 relative bg-slate-50 overflow-hidden">
+        <AnimatePresence mode="wait" initial={false} custom={wordDirection}>
+          <motion.div
+            key={wordIdx}
+            custom={wordDirection}
+            variants={wordSlideVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="w-full max-w-[320px] perspective-1000 my-auto h-[540px]"
+          >
+            <WordCard 
+              word={currentWord} 
+              isFlipped={wordFlipped} 
+              onFlip={() => setWordFlipped(!wordFlipped)} 
+            />
+          </motion.div>
+        </AnimatePresence>
 
-                {/* Back */}
-                <div className="absolute inset-0 backface-hidden rotate-y-180 flex flex-col bg-slate-800 rounded-2xl overflow-hidden text-white p-7">
-                  <div className="flex-1 flex flex-col justify-center">
-                    <h3 className="text-base font-bold mb-4 text-center leading-tight">{currentWord.question}</h3>
-                    <div className="w-8 h-px bg-slate-600 mb-5 mx-auto" />
-                    <p className="text-[13px] font-medium leading-relaxed text-slate-300 text-center whitespace-pre-line">
-                      {currentWord.passage}
-                    </p>
-                    <div className="mt-5 p-4 bg-slate-900/50 rounded-xl border border-slate-700/50">
-                      <p className="text-xs text-slate-400 leading-relaxed">{currentWord.explanation}</p>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          </AnimatePresence>
+        {/* 안내 문구 */}
+        <div className="mt-8 h-6 flex items-center justify-center">
+           <AnimatePresence mode="wait">
+             {!wordFlipped ? (
+               <motion.div
+                 key="flip-guide"
+                 initial={{ opacity: 0, y: 5 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 exit={{ opacity: 0, y: -5 }}
+                 className="flex items-center gap-2 text-slate-400"
+               >
+                 <MousePointerClick size={14} />
+                 <p className="text-xs font-bold tracking-tight">카드를 뒤집어 의미를 확인하세요</p>
+               </motion.div>
+             ) : (
+               <motion.p
+                 key="next-guide"
+                 initial={{ opacity: 0, y: 5 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 className="text-xs font-bold text-slate-300"
+               >
+                 단어의 의미를 충분히 읽어보세요
+               </motion.p>
+             )}
+           </AnimatePresence>
         </div>
+      </div>
 
-        <QuizFooter
-          disabled={!wordFlipped}
-          previousDisabled={isFirstWord}
-          onClick={() => {
-            if (isLastWord) { onComplete(); return }
-            setWordDirection(1)
-            setWordIdx((prev) => prev + 1)
-            setWordFlipped(false)
-          }}
-          onPrevious={isFirstWord ? undefined : () => {
-            setWordDirection(-1)
-            setWordIdx((prev) => prev - 1)
-            setWordFlipped(false)
-          }}
-        >
-          {isLastWord ? "단어 학습 완료" : "다음 단어"}
-        </QuizFooter>
+      {/* 푸터 영역 (뒤집었을 때만 노출) */}
+      <div className="shrink-0 bg-white relative min-h-[100px]">
+        <AnimatePresence>
+          {wordFlipped && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="w-full"
+            >
+              <QuizFooter
+                onPrevious={!isFirstWord ? handlePrev : undefined}
+                onClick={handleNext}
+              >
+                {isLastWord ? "학습 완료하기" : "다음 단어로 넘어가기"}
+              </QuizFooter>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </main>
   )
