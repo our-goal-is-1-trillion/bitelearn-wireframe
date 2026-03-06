@@ -12,6 +12,7 @@ export type DashboardCategory = {
   name: string
   lessons: number
   percent: number
+  emoji: string
 }
 
 export type DashboardRecommendation = {

@@ -26,6 +26,7 @@ import Mypage from "@/pages/Mypage"
 import ArticleDetail from "@/components/features/article/ArticleDetail"
 import { MOCK_CHOICE_QUESTION_SET } from "@/data/mock/choiceQuestion"
 import ChapterList from "@/components/features/chapter/ChapterList"
+import LearningHome from "@/components/features/chapter/LearningHome"
 
 export type QuizResultData = {
   total: number
@@ -55,6 +56,7 @@ export type Page =
   | "signup"
   | "mypage"
   | "chapterList"
+  | "learningHome"
 
 type TransitionStage = "idle" | "out" | "in"
 
@@ -63,6 +65,7 @@ export default function App() {
   const [targetPage, setTargetPage] = useState<Page | null>(null)
   const [transitionStage, setTransitionStage] = useState<TransitionStage>("idle")
   const [quizResult, setQuizResult] = useState<QuizResultData | null>(null)
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("real-estate")
 
   useEffect(() => {
     if (transitionStage === "out" && targetPage) {
@@ -217,10 +220,22 @@ export default function App() {
       case "mypage":
         return <Mypage />
 
+      case "learningHome":
+        return (
+          <LearningHome
+            onBack={() => handleNavigate("home")}
+            onSelectCategory={(id) => {
+              setSelectedCategoryId(id)
+              handleNavigate("chapterList")
+            }}
+          />
+        )
+
       case "chapterList":
         return (
           <ChapterList
-            onBack={() => handleNavigate("home")}
+            initialCategoryId={selectedCategoryId}
+            onBack={() => handleNavigate("learningHome")}
             onSelectChapter={() => handleNavigate("home")}
           />
         )
