@@ -70,9 +70,6 @@ export default function App() {
   const [targetPage, setTargetPage] = useState<Page | null>(null)
   const [transitionStage, setTransitionStage] = useState<TransitionStage>("idle")
   const [quizResult, setQuizResult] = useState<QuizResultData | null>(null)
-  
-  // Use selectedCategoryId in ChapterList to avoid 'unused' error
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("real-estate")
 
   useEffect(() => {
     if (transitionStage === "out" && targetPage) {
@@ -91,7 +88,6 @@ export default function App() {
     }
   }, [transitionStage, targetPage])
 
-  // Param name changed to 'page' to match component prop types
   const handleNavigate = (page: Page) => {
     if (transitionStage !== "idle") return
     if (page !== "result") setQuizResult(null)
@@ -138,7 +134,7 @@ export default function App() {
       case "articleList":
         return (
           <ArticleList
-            onSelectArticle={(_id) => handleNavigate("article")}
+            onSelectArticle={(_articleId) => handleNavigate("article")}
             onTabClick={handleTabClick}
           />
         )
@@ -219,7 +215,7 @@ export default function App() {
             articles={mockArticles}
             onMoveToChapter={() => handleNavigate("learningHome")}
             onMoveToLogin={() => handleNavigate("login")}
-            onMoveToArticle={(_id) => handleNavigate("article")}
+            onMoveToArticle={(_articleId) => handleNavigate("article")}
             onTabClick={handleTabClick}
             headerTitle="BiteLearn"
             headerSubtitle="로그인하고 맞춤 학습을 시작해보세요."
@@ -252,8 +248,7 @@ export default function App() {
       case "learningHome":
         return (
           <LearningHome
-            onSelectCategory={(categoryId) => {
-              setSelectedCategoryId(categoryId)
+            onSelectCategory={(_categoryId) => {
               handleNavigate("chapterList")
             }}
             onTabClick={handleTabClick}

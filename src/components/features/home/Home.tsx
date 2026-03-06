@@ -1,33 +1,7 @@
 import { useState } from "react"
 import OnboardingModal from "@/components/features/onboarding/OnboardingModal"
 import { ChevronRight, Folder, FileText, PlayCircle } from "lucide-react"
-
-export type Page =
-  | "home"
-  | "choiceQuestion"
-  | "choiceQuestionBottomSheet"
-  | "choiceQuestionInline"
-  | "oxQuestion"
-  | "oxQuestionBottomSheet"
-  | "oxQuestionInline"
-  | "conversationQuestion"
-  | "dashBoard"
-  | "result"
-  | "resultPerfect"
-  | "resultClose"
-  | "resultFail"
-  | "wordLearning"
-  | "article"
-  | "articleList"
-  | "documentChoiceQuestion"
-  | "documentClickQuestion"
-  | "login"
-  | "signup"
-  | "mypage"
-  | "chapterList"
-  | "chapterPlayer"
-  | "mistakeNote"
-  | "learningHome"
+import type { Page } from "@/App" // Import common Page type
 
 type IAAction = "onboarding"
 
@@ -71,8 +45,7 @@ const IA_STRUCTURE: IANode[] = [
             label: "챕터 목록 (Depth 2 · 로드맵)", 
             page: "chapterList",
             children: [
-              { label: "챕터 플레이어 (전체 14문항 통합)", page: "chapterPlayer" },
-              { label: "단어 학습 카드 (단독)", page: "wordLearning" },
+              { label: "단어 학습 카드", page: "wordLearning" },
               { 
                 label: "퀴즈 풀이 (Depth 3)",
                 children: [
