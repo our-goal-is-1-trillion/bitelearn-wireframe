@@ -14,7 +14,7 @@ interface IANode {
 
 const IA_STRUCTURE: IANode[] = [
   {
-    label: "Onboarding Flow",
+    label: "Onboarding",
     children: [
       { label: "서비스 온보딩 모달", action: "onboarding" },
       { label: "로그인", page: "login" },
@@ -22,92 +22,47 @@ const IA_STRUCTURE: IANode[] = [
     ]
   },
   {
-    label: "Main Dashboard (Tab 1)",
+    label: "Tab 1: 홈",
     children: [
+      { label: "홈 대시보드", page: "dashBoard" }
+    ]
+  },
+  {
+    label: "Tab 2: 학습",
+    children: [
+      { label: "학습 도메인 목록", page: "learningHome" },
+      { label: "챕터 목록", page: "chapterList" },
       { 
-        label: "홈 대시보드", 
-        page: "dashBoard",
+        label: "🔥 [FLOW] 연속 학습 과정 (화면이 아닌 전체 흐름)", 
+        page: "chapterPlayer",
         children: [
-          { label: "오늘의 추천 학습", page: "dashBoard" },
-          { label: "지식 보관함 (카테고리)", page: "dashBoard" },
+          { label: "단어 학습", page: "wordLearning" },
+          { label: "객관식 퀴즈", page: "choiceQuestion" },
+          { label: "OX 퀴즈", page: "oxQuestion" },
+          { label: "대화형 퀴즈", page: "conversationQuestion" },
+          { label: "문서 객관식", page: "documentChoiceQuestion" },
+          { label: "문서 오답 찾기", page: "documentClickQuestion" }
         ]
       }
     ]
   },
   {
-    label: "Learning Path (Tab 2)",
+    label: "Tab 3: 노트",
     children: [
-      { 
-        label: "학습 도메인 목록 (Depth 1)", 
-        page: "learningHome",
-        children: [
-          { 
-            label: "챕터 목록 (Depth 2 · 로드맵)", 
-            page: "chapterList",
-            children: [
-              { label: "학습 과정 Flow (전체 챕터 통합)", page: "chapterPlayer" },
-              { label: "단어 학습 카드 (단독)", page: "wordLearning" },
-              {
-                label: "퀴즈 풀이 (Depth 3)",
-                children: [
-                  { label: "지문형 객관식 (A/B/C)", page: "choiceQuestion" },
-                  { label: "지문형 OX (A/B/C)", page: "oxQuestion" },
-                  { label: "대화형 객관식", page: "conversationQuestion" },
-                  { label: "문서형 객관식", page: "documentChoiceQuestion" },
-                  { label: "문서 클릭 퀴즈", page: "documentClickQuestion" },
-                ]
-              },
-              { 
-                label: "학습 결과 (Depth 3)", 
-                children: [
-                  { label: "완벽 방어 (80%↑)", page: "resultPerfect" },
-                  { label: "아슬아슬 (40~79%)", page: "resultClose" },
-                  { label: "방어 실패 (40%↓)", page: "resultFail" },
-                ]
-              }
-            ]
-          }
-        ]
-      }
+      { label: "나의 학습 노트 통합", page: "mistakeNote" }
     ]
   },
   {
-    label: "Knowledge Note (Tab 3)",
+    label: "Tab 4: 아티클",
     children: [
-      { 
-        label: "나의 학습 노트 (통합)", 
-        page: "mistakeNote",
-        children: [
-          { label: "오답 복습 리스트", page: "mistakeNote" },
-          { label: "저장한 아티클 모음", page: "mistakeNote" },
-          { label: "학습 히스토리", page: "mistakeNote" },
-        ]
-      }
+      { label: "아티클 목록", page: "articleList" },
+      { label: "아티클 상세", page: "article" },
     ]
   },
   {
-    label: "Curated Articles (Tab 4)",
+    label: "Tab 5: 마이페이지",
     children: [
-      { 
-        label: "아티클 목록 페이지", 
-        page: "articleList",
-        children: [
-          { label: "아티클 상세 페이지", page: "article" },
-        ]
-      }
-    ]
-  },
-  {
-    label: "My Page (Tab 5)",
-    children: [
-      { 
-        label: "마이페이지 홈", 
-        page: "mypage",
-        children: [
-          { label: "계정 정보 관리", page: "mypage" },
-          { label: "학습 설정", page: "mypage" },
-        ]
-      }
+      { label: "마이페이지 홈", page: "mypage" }
     ]
   }
 ]

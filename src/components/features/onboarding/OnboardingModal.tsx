@@ -57,12 +57,12 @@ export default function OnboardingModal({
               transition={{ duration: 0.3, ease: 'easeInOut' }}
               className="absolute inset-0 flex flex-col items-center"
             >
-              {/* 이미지 영역 (Lo-fi style) */}
+              {/* 이미지 영역 (Full frame) */}
               <div className="relative h-[55%] w-full bg-slate-50 overflow-hidden border-b border-slate-100">
                 <img
                   src={imageSrc}
                   alt={`온보딩 단계 ${step + 1}`}
-                  className="h-full w-full object-contain p-8"
+                  className="h-full w-full object-cover"
                   onError={(e) => {
                     // Fallback for broken images during development
                     console.error("Image load failed:", imageSrc);
