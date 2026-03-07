@@ -21,12 +21,66 @@ const LEARNING_TABS = [
   { label: "마이", icon: UserRound, active: false },
 ]
 
-// ─── Stage Node (Roadmap node) ─────────────────────────────
-function StageNode({ 
-  chapter, 
+// ─── Roadmap geometry ────────────────────────────────────────
+// STEP_Y: center-to-center vertical distance between nodes (px)
+// HALF_BTN: half of button height (h-20 = 80px)
+// SVG_W: width of the SVG canvas (centered over the roadmap)
+// X_OFFSETS: horizontal zigzag offsets from center per node index
+const STEP_Y = 160
+const HALF_BTN = 40
+const SVG_W = 100
+const X_OFFSETS = [-35, 0, 35, 0] as const
+
+// ─── Catmull-Rom → cubic bezier path ────────────────────────
+// Guarantees smooth tangents at every junction (no kinks between segments).
+function smoothPath(pts: [number, number][]): string {
+  if (pts.length < 2) return ""
+  let d = `M ${pts[0][0]} ${pts[0][1]}`
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)]
+    const p1 = pts[i]
+    const p2 = pts[i + 1]
+    const p3 = pts[Math.min(pts.length - 1, i + 2)]
+    const cp1x = p1[0] + (p2[0] - p0[0]) / 6
+    const cp1y = p1[1] + (p2[1] - p0[1]) / 6
+    const cp2x = p2[0] - (p3[0] - p1[0]) / 6
+    const cp2y = p2[1] - (p3[1] - p1[1]) / 6
+    d += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)}, ${cp2x.toFixed(1)} ${cp2y.toFixed(1)}, ${p2[0]} ${p2[1]}`
+  }
+  return d
+}
+
+// ─── Roadmap SVG curve ───────────────────────────────────────
+function RoadmapCurve({ count, totalH }: { count: number; totalH: number }) {
+  if (count <= 1) return null
+  const cx = SVG_W / 2
+  const pts: [number, number][] = Array.from({ length: count }, (_, i) => [
+    cx + X_OFFSETS[i % 4],
+    HALF_BTN + i * STEP_Y,
+  ])
+  const d = smoothPath(pts)
+  return (
+    <svg
+      className="absolute left-1/2 top-0 -translate-x-1/2 pointer-events-none"
+      width={SVG_W}
+      height={totalH}
+      viewBox={`0 0 ${SVG_W} ${totalH}`}
+      fill="none"
+    >
+      {/* glow */}
+      <path d={d} stroke="#F8FAFC" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" />
+      {/* main track */}
+      <path d={d} stroke="#E2E8F0" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+// ─── Stage Node ──────────────────────────────────────────────
+function StageNode({
+  chapter,
   index,
-  onSelect
-}: { 
+  onSelect,
+}: {
   chapter: Chapter
   index: number
   onSelect: () => void
@@ -34,71 +88,72 @@ function StageNode({
   const isCompleted = chapter.status === "completed"
   const isInProgress = chapter.status === "in_progress"
   const isLocked = chapter.status === "locked"
-  
-  const offsets = ["-30px", "0px", "30px", "0px"]
-  const xOffset = offsets[index % 4]
 
   return (
-    <motion.div 
-      className="relative flex flex-col items-center"
-      style={{ x: xOffset }}
-      initial={{ opacity: 0, scale: 0.95 }}
+    <motion.div
+      className="flex flex-col items-center"
+      initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: index * 0.05 }}
+      transition={{ delay: index * 0.05, type: "spring", stiffness: 260, damping: 22 }}
     >
-      <div className="relative flex flex-col items-center">
-        <Button
-          disabled={isLocked}
-          onClick={onSelect}
-          variant={isInProgress ? "default" : "outline"}
-          className={`
-            relative z-10 flex h-20 w-20 items-center justify-center rounded-[28px] shadow-sm transition-all active:scale-95 border-2
-            ${isCompleted ? "bg-slate-900 border-slate-900 text-white" : ""}
-            ${isInProgress ? "bg-white border-slate-900 ring-4 ring-slate-100" : ""}
-            ${isLocked ? "bg-slate-50 border-slate-200 text-slate-300" : "bg-white border-slate-200"}
-          `}
-        >
-          {isCompleted ? (
-            <Check size={32} strokeWidth={3} />
-          ) : isLocked ? (
-            <Lock size={20} />
-          ) : (
-            <span className="text-3xl">{chapter.emoji}</span>
-          )}
-          
-          {isInProgress && (
-            <div className="absolute -top-2 -right-1 rounded-full bg-slate-900 px-2 py-0.5 text-[10px] font-bold text-white">
-              진행 중
-            </div>
-          )}
-        </Button>
+      <Button
+        disabled={isLocked}
+        onClick={onSelect}
+        variant={isInProgress ? "default" : "outline"}
+        className={`
+          relative z-10 flex h-20 w-20 items-center justify-center rounded-[28px] shadow-sm transition-all active:scale-95 border-2
+          ${isCompleted ? "bg-slate-900 border-slate-900 text-white" : ""}
+          ${isInProgress ? "bg-white border-slate-900 ring-4 ring-slate-100" : ""}
+          ${isLocked ? "bg-slate-50 border-slate-200 text-slate-300" : "bg-white border-slate-200"}
+        `}
+      >
+        {isCompleted ? (
+          <Check size={32} strokeWidth={3} />
+        ) : isLocked ? (
+          <Lock size={20} />
+        ) : (
+          <span className="text-3xl">{chapter.emoji}</span>
+        )}
+        {isInProgress && (
+          <div className="absolute -top-2 -right-1 rounded-full bg-slate-900 px-2 py-0.5 text-[10px] font-bold text-white">
+            진행 중
+          </div>
+        )}
+      </Button>
 
-        <div className="mt-3 max-w-[120px] text-center">
-          <p className={`text-xs font-bold leading-tight ${isLocked ? "text-slate-400" : "text-slate-900"}`}>
-            {chapter.title}
+      <div className="mt-3 max-w-[110px] text-center">
+        <p className={`text-xs font-bold leading-tight ${isLocked ? "text-slate-400" : "text-slate-900"}`}>
+          {chapter.title}
+        </p>
+        {!isLocked && (
+          <p className="mt-1 text-xs text-slate-400 font-medium">
+            약 {chapter.estimatedMinutes}분 · {chapter.questionCount}문제
           </p>
-          {!isLocked && (
-            <p className="mt-1 text-xs text-slate-400 font-medium">
-              약 {chapter.estimatedMinutes}분 · {chapter.questionCount}문제
-            </p>
-          )}
-        </div>
+        )}
       </div>
     </motion.div>
   )
 }
 
-// ─── Main component ────────────────────────────────────────────
+// ─── Main component ──────────────────────────────────────────
 export default function ChapterList({ initialCategoryId, onBack, onSelectChapter, onTabClick }: ChapterListProps) {
   const [selectedCategoryId, setSelectedCategoryId] = useState(initialCategoryId || "real-estate")
 
   const category = MOCK_CATEGORY_CHAPTERS.find((c) => c.categoryId === selectedCategoryId)!
   const progressPercent = Math.round((category.completedChapters / category.totalChapters) * 100)
+  const count = category.chapters.length
+
+  // Total height of the roadmap canvas:
+  // first node center at HALF_BTN, last at (count-1)*STEP_Y + HALF_BTN,
+  // plus TEXT_H below last button for text labels + bottom padding.
+  const TEXT_H = 72
+  const roadmapH = HALF_BTN + (count - 1) * STEP_Y + HALF_BTN + TEXT_H
 
   return (
     <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900 flex flex-col border border-slate-200">
       <div className="relative flex h-full flex-col">
 
+        {/* ── Header ── */}
         <div className="shrink-0 bg-white border-b border-slate-100">
           <div className="flex h-14 items-center px-4">
             <Button
@@ -113,6 +168,7 @@ export default function ChapterList({ initialCategoryId, onBack, onSelectChapter
             <div className="h-9 w-9" />
           </div>
 
+          {/* Category tabs */}
           <div className="hide-scrollbar flex gap-2 overflow-x-auto px-4 pb-3">
             {MOCK_CATEGORY_CHAPTERS.map((cat) => (
               <Button
@@ -131,8 +187,10 @@ export default function ChapterList({ initialCategoryId, onBack, onSelectChapter
           </div>
         </div>
 
+        {/* ── Scrollable content ── */}
         <section className="hide-scrollbar flex-1 overflow-y-auto px-6 pb-32 pt-10">
-          
+
+          {/* Progress card */}
           <div className="mb-14 rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
             <div className="flex items-end justify-between mb-3">
               <div>
@@ -151,22 +209,34 @@ export default function ChapterList({ initialCategoryId, onBack, onSelectChapter
             </div>
           </div>
 
-          <div className="relative flex flex-col items-center gap-16">
-            <div className="absolute top-8 bottom-8 w-1 bg-slate-50 rounded-full" />
-            
-            {category.chapters.map((chapter, index) => (
-              <StageNode 
-                key={chapter.id} 
-                chapter={chapter} 
-                index={index} 
-                onSelect={() => onSelectChapter(chapter.id)}
-              />
+          {/* ── Roadmap ── */}
+          {/* Nodes are absolutely positioned at known coordinates so the SVG
+              curve path exactly passes through each button's center. */}
+          <div className="relative mx-auto w-full" style={{ height: roadmapH }}>
+            <RoadmapCurve count={count} totalH={roadmapH} />
+
+            {category.chapters.map((chapter, i) => (
+              <div
+                key={chapter.id}
+                className="absolute"
+                style={{
+                  top: i * STEP_Y,
+                  left: "50%",
+                  transform: `translateX(calc(-50% + ${X_OFFSETS[i % 4]}px))`,
+                }}
+              >
+                <StageNode
+                  chapter={chapter}
+                  index={i}
+                  onSelect={() => onSelectChapter(chapter.id)}
+                />
+              </div>
             ))}
-            
-            <div className="mt-12 text-center">
-               <div className="inline-block rounded-xl border border-dashed border-slate-200 bg-slate-50 px-6 py-3 text-xs font-bold text-slate-300">
-                 다음 단계를 준비 중이에요
-               </div>
+          </div>
+
+          <div className="mt-8 mb-4 text-center">
+            <div className="inline-block rounded-xl border border-dashed border-slate-200 bg-slate-50 px-6 py-3 text-xs font-bold text-slate-300">
+              다음 단계를 준비 중이에요
             </div>
           </div>
         </section>

@@ -95,9 +95,9 @@ export default function ChoiceQuestionBottomSheet({ onComplete }: ChoiceQuestion
           <QuizHeader title={quizTypeLabel} showCloseButton onCloseClick={() => window.history.back()} />
         </div>
 
+        <ChoiceQuestionIndicator steps={indicatorSteps} />
         {phase !== "result" && (
           <>
-            <ChoiceQuestionIndicator steps={indicatorSteps} />
             <ChoiceQuestionImage src={currentQuestion.imageUrl} alt={currentQuestion.imageAlt} />
             
             {/* 

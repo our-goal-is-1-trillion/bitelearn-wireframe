@@ -37,7 +37,7 @@ export default function AccountInfoPage({ onBack }: AccountInfoPageProps) {
                 </button>
               </div>
               <div className="flex items-center gap-1">
-                <p className="rounded-full px-1 py-1 text-md text-bold text-slate-700">Siwon</p>
+                <p className="rounded-full px-1 py-1 text-md text-bold text-slate-700">BiteLearn</p>
                 <button
                   type="button"
                   aria-label="닉네임 변경하기"
@@ -56,7 +56,7 @@ export default function AccountInfoPage({ onBack }: AccountInfoPageProps) {
           <div className="mt-4 flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <p className="rounded-full px-1 py-1 text-xs text-slate-700">이메일</p>
-              <p className="cursor-not-allowed rounded-full bg-slate-100 px-2 py-1 text-xs text-slate-500">siwon@bitelearn.com</p>
+              <p className="cursor-not-allowed rounded-full bg-slate-100 px-2 py-1 text-xs text-slate-500">bitelearn@bitelearn.com</p>
             </div>
             <div className="flex items-center justify-between">
               <p className="rounded-full px-1 py-1 text-xs text-slate-700">비밀번호 변경</p>
