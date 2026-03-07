@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, type Variants } from "framer-motion"
 import { MousePointerClick } from "lucide-react"
 import QuizHeader from "@/components/layout/QuizHeader"
 import QuizFooter from "@/components/layout/QuizFooter"
@@ -59,7 +59,7 @@ export default function WordCardsPlayer({
   }
 
   // ─── Animation Variants ───
-  const slideVariants = {
+  const slideVariants: Variants = {
     initial: (dir: number) => ({
       x: dir > 0 ? "110%" : "-110%",
       y: wordFlipped ? 0 : -40,
