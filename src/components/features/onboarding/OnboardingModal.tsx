@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ONBOARDING_DATA } from '@/constants/onboardingData';
+import { ONBOARDING_DATA } from './onboardingData'
 
 type OnboardingModalProps = {
   isOpen: boolean;
