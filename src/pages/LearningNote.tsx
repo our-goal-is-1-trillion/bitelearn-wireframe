@@ -44,7 +44,7 @@ export default function LearningNote({ onTabClick }: { onTabClick: (label: strin
   return (
     <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900">
       <div className="relative flex h-full flex-col border border-slate-200">
-        
+        <div className="hide-scrollbar flex-1 overflow-y-auto pb-28 text-sm">
         {/* ── Fixed Top Header ────────────────────────── */}
         <header className="shrink-0 bg-white px-6 pt-12 pb-6 border-b border-slate-50">
           <div className="flex items-end justify-between mb-8">
@@ -117,8 +117,8 @@ export default function LearningNote({ onTabClick }: { onTabClick: (label: strin
           </Button>
         </nav>
 
-        {/* ── Scrollable Content Area ───────────────────── */}
-        <section className="hide-scrollbar flex-1 overflow-y-auto px-6 pb-28 pt-6">
+        {/* ── Content Area ───────────────────── */}
+        <section className="px-6 pt-6">
           <AnimatePresence mode="wait">
             
             {/* 1. Review Tab (Mistake Notes) */}
@@ -249,6 +249,7 @@ export default function LearningNote({ onTabClick }: { onTabClick: (label: strin
 
           </AnimatePresence>
         </section>
+        </div>
 
         <DashboardBottomNav tabs={tabs} onTabClick={onTabClick} />
       </div>
