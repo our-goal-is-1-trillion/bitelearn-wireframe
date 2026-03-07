@@ -92,10 +92,12 @@ export default function OxQuestionInlineScroll({ onComplete }: OxQuestionInlineS
           />
         </div>
 
+        <div className="z-10 bg-white pb-2 relative border-b border-slate-100">
+          <ChoiceQuestionIndicator steps={indicatorSteps} />
+        </div>
+
         {phase !== "result" && (
           <div className="flex-1 overflow-y-auto">
-            {/* 진행도 바 */}
-            <ChoiceQuestionIndicator steps={indicatorSteps} />
 
             {/* 인라인 스크롤 모드: 지문 영역과 선택지 영역이 스크롤 안에서 연달아 표시됨 */}
             {/* 지문 영역 */}
@@ -123,7 +125,7 @@ export default function OxQuestionInlineScroll({ onComplete }: OxQuestionInlineS
         )}
 
         {phase === "result" && (
-          <div className="absolute inset-x-0 bottom-0 top-14 bg-white z-30">
+          <div className="flex min-h-0 flex-1 flex-col bg-white">
             <ChoiceQuestionResult
               isCorrect={isCorrect}
               correctAnswerText={currentQuestion.choices[currentQuestion.correctIndex]}

@@ -75,8 +75,8 @@ export default function Mypage({ onTabClick }: MypageProps) {
                 👤
               </div>
               <div>
-                <p className="text-lg font-bold">Siwon님</p>
-                <p className="text-sm text-slate-600">siwon@bitelearn.com</p>
+                <p className="text-lg font-bold">BiteLearn님</p>
+                <p className="text-sm text-slate-600">bitelearn@bitelearn.com</p>
               </div>
             </div>
             <div className="items-center justify-center">

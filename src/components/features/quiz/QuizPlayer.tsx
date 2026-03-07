@@ -364,11 +364,9 @@ export default function QuizPlayer({ questions, headerTitle, onBack, onComplete,
           />
         </div>
 
+        <ChoiceQuestionIndicator steps={indicatorSteps} />
         {phase !== "result" && (
-          <>
-            <ChoiceQuestionIndicator steps={indicatorSteps} />
-            <ChoiceQuestionImage src={currentQ.imageUrl} alt={currentQ.imageAlt} />
-          </>
+          <ChoiceQuestionImage src={currentQ.imageUrl} alt={currentQ.imageAlt} />
         )}
 
         {renderContent()}
