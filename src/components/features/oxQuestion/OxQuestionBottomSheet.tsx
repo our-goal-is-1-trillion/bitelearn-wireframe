@@ -94,10 +94,10 @@ export default function OxQuestionBottomSheet({ onComplete }: OxQuestionBottomSh
           />
         </div>
 
+        <ChoiceQuestionIndicator steps={indicatorSteps} />
+
         {phase !== "result" && (
           <>
-            <ChoiceQuestionIndicator steps={indicatorSteps} />
-            
             {/* 바텀 시트 모드: 지문(Passage)은 항상 깔려 있음. */}
             <ChoiceQuestionPassage
               passage={currentQuestion.passage}

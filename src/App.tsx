@@ -245,7 +245,7 @@ export default function App() {
         )
 
       case "mypage":
-        return <Mypage />
+        return <Mypage onTabClick={handleTabClick} />
 
       case "learningHome":
         return (
