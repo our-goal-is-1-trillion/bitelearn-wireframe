@@ -13,7 +13,7 @@ type LearningHomeProps = {
 const LEARNING_TABS = [
   { label: "홈", icon: House, active: false },
   { label: "학습", icon: GraduationCap, active: true },
-  { label: "오답노트", icon: BookOpenCheck, active: false },
+  { label: "노트", icon: BookOpenCheck, active: false },
   { label: "아티클", icon: FileText, active: false },
   { label: "마이", icon: UserRound, active: false },
 ]

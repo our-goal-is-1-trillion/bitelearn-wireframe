@@ -31,7 +31,11 @@ const MENU_ITEMS: MenuItem[] = [
   },
 ]
 
-export default function Mypage() {
+type MypageProps = {
+  onTabClick?: (label: string) => void
+}
+
+export default function Mypage({ onTabClick }: MypageProps) {
   const [currentPage, setCurrentPage] = useState<"main" | "accountInfo">("main")
   const mypageTabs = DASHBOARD_TABS.map((tab) => ({
     ...tab,
@@ -134,7 +138,7 @@ export default function Mypage() {
         <AccountInfoPage onBack={() => setCurrentPage("main")} />
       )}
 
-      {currentPage === "main" && <DashboardBottomNav tabs={mypageTabs} />}
+      {currentPage === "main" && <DashboardBottomNav tabs={mypageTabs} onTabClick={onTabClick} />}
     </main>
   )
 }
