@@ -72,4 +72,4 @@ export const ONBOARDING_DATA = [
       </>
     ),
   },
-];
+]

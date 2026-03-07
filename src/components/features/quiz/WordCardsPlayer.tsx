@@ -10,10 +10,12 @@ import type { ChoiceQuestionItem } from "@/data/mock/choiceQuestion"
 
 type WordCardsPlayerProps = {
   words: ChoiceQuestionItem[]
+  /** 외부에서 관리되는 현재 단어 인덱스 */
   wordIdx: number
   onWordIdxChange: (idx: number) => void
   onComplete: () => void
   onBack: () => void
+  /** ChapterPlayer에서 내려오는 통합 인디케이터 (미제공 시 로컬 계산) */
   indicatorSteps?: StepIndicatorInfo[]
 }
 
@@ -56,17 +58,16 @@ export default function WordCardsPlayer({
     onWordIdxChange(wordIdx - 1)
   }
 
-  // ─── Refined Animation Variants ───
-  // y축 이동을 부모가 아닌 변수 내부에서 직접 제어하여 사선 이동을 방지합니다.
+  // ─── Animation Variants ───
   const slideVariants = {
     initial: (dir: number) => ({
       x: dir > 0 ? "110%" : "-110%",
-      y: wordFlipped ? 0 : -40, // Match current state position
+      y: wordFlipped ? 0 : -40,
       opacity: 0,
     }),
     animate: {
       x: 0,
-      y: wordFlipped ? 0 : -40, // Position based on flip state
+      y: wordFlipped ? 0 : -40,
       opacity: 1,
       transition: {
         x: { type: "spring", stiffness: 300, damping: 30 },
@@ -76,8 +77,7 @@ export default function WordCardsPlayer({
     },
     exit: (dir: number) => ({
       x: dir > 0 ? "-110%" : "110%",
-      // CRITICAL: exit 시점의 y축을 현재 y축과 동일하게 유지하여 수평 이동 보장
-      y: wordFlipped ? 0 : -40, 
+      y: wordFlipped ? 0 : -40, // Match current state position to ensure horizontal exit
       opacity: 0,
       transition: {
         x: { type: "spring", stiffness: 300, damping: 30 },
@@ -90,16 +90,16 @@ export default function WordCardsPlayer({
 
   return (
     <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-slate-50 text-slate-900 flex flex-col border border-slate-200 shadow-xl">
-      {/* 1. Fixed Header Area */}
+      {/* 1. Header Area */}
       <div className="shrink-0 bg-white z-20 border-b border-slate-100">
         <QuizHeader title="생존 단어장" showCloseButton onCloseClick={onBack} />
         <ChoiceQuestionIndicator steps={indicatorSteps} />
       </div>
 
-      {/* 2. Main Content (The Interaction Zone) */}
+      {/* 2. Main Content Area */}
       <div className="flex-1 relative flex items-center justify-center px-6 overflow-hidden">
         
-        {/* The Card Slider */}
+        {/* Card Container */}
         <AnimatePresence mode="wait" initial={false} custom={wordDirection}>
           <motion.div
             key={wordIdx}
@@ -119,10 +119,11 @@ export default function WordCardsPlayer({
         </AnimatePresence>
 
         {/* Overlay Guide Text */}
-        <div className="absolute bottom-20 inset-x-0 flex items-center justify-center pointer-events-none">
+        <div className="absolute bottom-10 inset-x-0 flex items-center justify-center pointer-events-none">
           <AnimatePresence>
             {!wordFlipped && (
               <motion.div
+                key="flip-guide"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
@@ -136,11 +137,12 @@ export default function WordCardsPlayer({
         </div>
       </div>
 
-      {/* 3. Footer Area (Appears on flip) */}
+      {/* 3. Footer Area */}
       <div className="shrink-0 bg-white border-t border-slate-100 min-h-[100px] relative z-30">
         <AnimatePresence>
           {wordFlipped && (
             <motion.div
+              key="footer-cta"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}

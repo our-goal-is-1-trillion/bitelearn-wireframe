@@ -1,5 +1,5 @@
 import QuizFooter from "@/components/layout/QuizFooter"
-import QuestionPassage from "@/components/common/QuestionPassage"
+import QuestionPassage from "@/components/shared/QuestionPassage"
 
 type ChoiceQuestionPassageProps = {
   /** 지문 텍스트 */
