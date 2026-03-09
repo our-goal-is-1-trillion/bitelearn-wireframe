@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { motion, AnimatePresence, type Variants } from "framer-motion"
 import { MousePointerClick } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import QuizHeader from "@/components/layout/QuizHeader"
 import QuizFooter from "@/components/layout/QuizFooter"
 import ChoiceQuestionIndicator from "@/components/features/choiceQuestion/ChoiceQuestionIndicator"
@@ -31,6 +32,7 @@ export default function WordCardsPlayer({
 }: WordCardsPlayerProps) {
   const [wordFlipped, setWordFlipped] = useState(false)
   const [wordDirection, setWordDirection] = useState(1)
+  const [showBriefing, setShowBriefing] = useState(false)
 
   const currentWord = words[wordIdx]
   const isFirstWord = wordIdx === 0
@@ -45,7 +47,7 @@ export default function WordCardsPlayer({
 
   const handleNext = () => {
     if (isLastWord) {
-      onComplete()
+      setShowBriefing(true)
       return
     }
     setWordDirection(1)
@@ -89,6 +91,34 @@ export default function WordCardsPlayer({
   }
 
   if (!currentWord) return null
+
+  if (showBriefing) {
+    return (
+      <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900 border border-slate-200">
+        <QuizHeader title={headerTitle || "생존 단어장"} showCloseButton onCloseClick={onBack} />
+        <div className="flex h-[calc(100%-64px)] flex-col items-center justify-center px-6">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, type: "spring" }}
+            className="flex w-full flex-col items-center text-center"
+          >
+            <div className="mb-6 h-20 w-20 rounded-full bg-orange-50 flex items-center justify-center shadow-inner">
+              <span className="text-4xl">🐶</span>
+            </div>
+            <h1 className="text-[22px] font-bold text-slate-900 mb-3 break-keep">단어 학습 완벽해요!</h1>
+            <p className="text-sm font-medium text-slate-500 mb-10 max-w-[240px] leading-relaxed break-keep">
+              방금 배운 내용을 바탕으로 실전 퀴즈를 풀고 멍멍이의 바이트를 모아볼까요?
+            </p>
+
+            <Button className="w-full h-14 rounded-2xl bg-indigo-600 outline-none hover:bg-indigo-700 text-base font-bold text-white shadow-lg active:scale-95 transition-all" onClick={onComplete}>
+              퀴즈 풀러 가기
+            </Button>
+          </motion.div>
+        </div>
+      </main>
+    )
+  }
 
   return (
     <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-slate-50 text-slate-900 flex flex-col border border-slate-200 shadow-xl">

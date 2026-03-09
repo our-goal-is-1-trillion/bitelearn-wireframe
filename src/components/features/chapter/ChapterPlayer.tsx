@@ -29,25 +29,65 @@ function ChapterIntroScreen({
 }) {
   return (
     <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900">
-      <div className="flex h-full flex-col items-center justify-center border border-slate-200 px-6">
+      <div className="flex h-full flex-col items-center justify-between border border-slate-200 px-6 py-12">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="flex w-full flex-col items-center text-center"
+          className="flex w-full flex-col items-center text-center mt-12"
         >
-          <div className="w-full flex-1 flex flex-col items-center justify-center space-y-4 my-24">
-            <h1 className="text-lg font-bold leading-tight tracking-tight text-slate-500">이번 챕터에서는</h1>
-            <p className="text-[22px] font-bold leading-relaxed text-slate-900 break-keep px-4">
-              "{chapterTitle}"
-            </p>
-            <p className="text-sm font-medium leading-relaxed text-slate-400 break-keep mt-2">
-              기본적인 단어부터 실전 상황까지<br />순서대로 학습해보세요.
+          <div className="mb-8">
+            <span className="inline-block rounded-full bg-indigo-50 px-3 py-1 text-[10px] font-black tracking-widest text-indigo-600 mb-4">
+              CHAPTER MISSION
+            </span>
+            <p className="text-[22px] font-bold leading-snug text-slate-900 break-keep px-2">
+              {chapterTitle}
             </p>
           </div>
-          
-          <Button className="w-full h-14 rounded-2xl bg-indigo-600 outline-none hover:bg-indigo-600 text-base font-bold text-white shadow-lg active:scale-95 transition-all" onClick={onStart}>
-            학습 시작하기
+
+          <div className="w-full bg-slate-50 border border-slate-100 rounded-[24px] p-6 space-y-5 text-left shadow-sm">
+             <div className="flex gap-4">
+               <div className="text-2xl pt-0.5">🎯</div>
+               <div>
+                 <p className="text-[11px] font-bold text-slate-400">이번 미션</p>
+                 <p className="text-[13px] font-bold text-slate-700 mt-0.5 max-w-[200px] break-keep">부동산 필수 개념 5개 완벽하게 마스터하기</p>
+               </div>
+             </div>
+             
+             <div className="h-px w-full bg-slate-100" />
+
+             <div className="flex gap-4">
+               <div className="text-2xl pt-0.5">🪙</div>
+               <div>
+                 <p className="text-[11px] font-bold text-slate-400">완료 보상</p>
+                 <p className="text-[13px] font-bold text-orange-600 mt-0.5">+50 B 획득 가능</p>
+               </div>
+             </div>
+
+             <div className="h-px w-full bg-slate-100" />
+
+             <div className="flex gap-4">
+               <div className="text-2xl pt-0.5">📖</div>
+               <div>
+                 <p className="text-[11px] font-bold text-slate-400">핵심 내용</p>
+                 <div className="flex flex-wrap gap-1.5 mt-2">
+                    <span className="inline-flex rounded-lg bg-white border border-slate-200 text-slate-600 text-[10px] font-bold px-2 py-1">LTV & DTI</span>
+                    <span className="inline-flex rounded-lg bg-white border border-slate-200 text-slate-600 text-[10px] font-bold px-2 py-1">임대차 3법</span>
+                    <span className="inline-flex rounded-lg bg-white border border-slate-200 text-slate-600 text-[10px] font-bold px-2 py-1">전세권</span>
+                 </div>
+               </div>
+             </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+           initial={{ opacity: 0, y: 24 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ duration: 0.4, delay: 0.1 }}
+           className="w-full"
+        >
+          <Button className="w-full h-14 rounded-2xl bg-indigo-600 outline-none hover:bg-indigo-700 text-base font-bold text-white shadow-lg shadow-indigo-200 active:scale-95 transition-all" onClick={onStart}>
+            미션 시작하기
           </Button>
         </motion.div>
       </div>

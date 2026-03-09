@@ -86,6 +86,7 @@ function StageNode({
 }) {
   const isCompleted = chapter.status === "completed"
   const isInProgress = chapter.status === "in_progress"
+  const isAvailable = chapter.status === "available"
   const isLocked = chapter.status === "locked"
 
   return (
@@ -95,30 +96,41 @@ function StageNode({
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: index * 0.05, type: "spring", stiffness: 260, damping: 22 }}
     >
-      <Button
-        disabled={isLocked}
-        onClick={onSelect}
-        variant={isInProgress ? "default" : "outline"}
-        className={`
-          relative z-10 flex h-20 w-20 items-center justify-center rounded-[28px] shadow-sm transition-all active:scale-95 border-2
-          ${isCompleted ? "bg-slate-900 border-slate-900 text-white" : ""}
-          ${isInProgress ? "bg-white border-slate-900 ring-4 ring-slate-100" : ""}
-          ${isLocked ? "bg-slate-50 border-slate-200 text-slate-300" : "bg-white border-slate-200"}
-        `}
-      >
-        {isCompleted ? (
-          <Check size={32} strokeWidth={3} />
-        ) : isLocked ? (
-          <Lock size={20} />
-        ) : (
-          <span className="text-3xl">{chapter.emoji}</span>
-        )}
+      <div className="relative">
         {isInProgress && (
-          <div className="absolute -top-2 -right-1 rounded-full bg-slate-900 px-2 py-0.5 text-[10px] font-bold text-white">
-            진행 중
-          </div>
+          <div className="absolute inset-0 rounded-[28px] bg-blue-400 opacity-20 animate-ping z-0" style={{ animationDuration: '2s' }} />
         )}
-      </Button>
+        <Button
+          disabled={isLocked}
+          onClick={onSelect}
+          variant="outline"
+          className={`
+            relative z-10 flex h-20 w-20 items-center justify-center rounded-[28px] shadow-sm transition-all active:scale-95 border-2
+            ${isCompleted ? "bg-slate-900 border-slate-900 text-white hover:bg-slate-800 hover:text-white" : ""}
+            ${isInProgress ? "bg-white border-blue-500 ring-4 ring-blue-50 hover:bg-slate-50" : ""}
+            ${isLocked ? "bg-slate-50 border-slate-200 text-slate-300" : (!isInProgress && !isCompleted) ? "bg-white border-slate-200 hover:bg-slate-50" : ""}
+          `}
+        >
+          {isCompleted ? (
+            <Check size={32} strokeWidth={3} />
+          ) : isLocked ? (
+            <Lock size={20} />
+          ) : (
+            <span className="text-3xl">{chapter.emoji}</span>
+          )}
+          
+          {isInProgress && (
+            <div className="absolute -top-3 -right-8 rounded-full bg-blue-600 px-2.5 py-1 text-[10px] font-black text-white shadow-md flex items-center gap-1 whitespace-nowrap">
+              <span className="animate-pulse">▶</span> 이어서 학습 중
+            </div>
+          )}
+          {isAvailable && (
+            <div className="absolute -top-2 -right-4 rounded-full bg-slate-800 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm whitespace-nowrap">
+              다음 챕터
+            </div>
+          )}
+        </Button>
+      </div>
 
       <div className="mt-3 max-w-[110px] text-center">
         <p className={`text-xs font-bold leading-tight ${isLocked ? "text-slate-400" : "text-slate-900"}`}>

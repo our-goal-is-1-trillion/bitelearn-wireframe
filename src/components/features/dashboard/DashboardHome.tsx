@@ -56,14 +56,16 @@ export default function DashboardHome({
             />
             
             <div className="space-y-12">
-              <DashboardContinueCard
-                userType={userType}
-                onContinue={onMoveToChapter}
-                headline={continueHeadline}
-                category={continueCategory}
-                lessonTitle={continueLessonTitle}
-                meta={continueMeta}
-              />
+              {userType === "active" && (
+                <DashboardContinueCard
+                  userType={userType}
+                  onContinue={onMoveToChapter}
+                  headline={continueHeadline}
+                  category={continueCategory}
+                  lessonTitle={continueLessonTitle}
+                  meta={continueMeta}
+                />
+              )}
               
               <DashboardCategoryList categories={categories} />
               
