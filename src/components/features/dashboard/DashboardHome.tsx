@@ -5,7 +5,7 @@ import DashboardHeader from "./DashboardHeader"
 import DashboardTodayRecommendation from "./DashboardTodayRecommendation"
 import { Button } from "@/components/ui/button"
 import ArticleCard from "@/components/features/article/ArticleCard"
-import type { DashboardCategory, DashboardRecommendation, DashboardTab } from "./dashboard.types"
+import type { DashboardCategory, DashboardRecommendation, DashboardTab, UserOnboardingType } from "./dashboard.types"
 import type { ArticleDetail } from "@/data/mock/article"
 
 type DashboardHomeProps = {
@@ -13,6 +13,7 @@ type DashboardHomeProps = {
   categories: DashboardCategory[]
   recommendations: DashboardRecommendation[]
   articles: ArticleDetail[]
+  userType?: UserOnboardingType
   onMoveToChapter: () => void
   onMoveToLogin: () => void
   onMoveToArticle: (articleId: string) => void
@@ -30,6 +31,7 @@ export default function DashboardHome({
   categories,
   recommendations,
   articles,
+  userType = "active",
   onMoveToChapter,
   onMoveToLogin,
   onMoveToArticle,
@@ -48,12 +50,14 @@ export default function DashboardHome({
           <div className="flex flex-col">
             <DashboardHeader
               onProfileClick={onMoveToLogin}
+              userType={userType}
               title={headerTitle}
               subtitle={headerSubtitle}
             />
             
             <div className="space-y-12">
               <DashboardContinueCard
+                userType={userType}
                 onContinue={onMoveToChapter}
                 headline={continueHeadline}
                 category={continueCategory}

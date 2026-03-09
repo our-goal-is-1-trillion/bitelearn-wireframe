@@ -24,7 +24,9 @@ const IA_STRUCTURE: IANode[] = [
   {
     label: "Tab 1: 홈",
     children: [
-      { label: "홈 대시보드", page: "dashBoard" }
+      { label: "홈 대시보드 (신규 회원)", page: "dashBoardNew" },
+      { label: "홈 대시보드 (비회원 온보딩)", page: "dashBoardGuest" },
+      { label: "홈 대시보드 (기존 회원)", page: "dashBoardActive" }
     ]
   },
   {

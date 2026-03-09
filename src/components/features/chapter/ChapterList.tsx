@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { motion } from "framer-motion"
 import { ChevronLeft, Check, Lock, GraduationCap, House, BookOpenCheck, FileText, UserRound } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -137,11 +136,10 @@ function StageNode({
 
 // ─── Main component ──────────────────────────────────────────
 export default function ChapterList({ initialCategoryId, onBack, onSelectChapter, onTabClick }: ChapterListProps) {
-  const [selectedCategoryId, setSelectedCategoryId] = useState(initialCategoryId || "real-estate")
-
-  const category = MOCK_CATEGORY_CHAPTERS.find((c) => c.categoryId === selectedCategoryId)!
+  const category = MOCK_CATEGORY_CHAPTERS.find((c) => c.categoryId === (initialCategoryId || "real-estate")) ?? MOCK_CATEGORY_CHAPTERS[0]
   const progressPercent = Math.round((category.completedChapters / category.totalChapters) * 100)
-  const count = category.chapters.length
+  const reversedChapters = [...category.chapters].reverse()
+  const count = reversedChapters.length
 
   // Total height of the roadmap canvas:
   // first node center at HALF_BTN, last at (count-1)*STEP_Y + HALF_BTN,
@@ -164,26 +162,8 @@ export default function ChapterList({ initialCategoryId, onBack, onSelectChapter
             >
               <ChevronLeft size={20} />
             </Button>
-            <h1 className="flex-1 text-center text-sm font-bold text-slate-900">학습 로드맵</h1>
+            <h1 className="flex-1 text-center text-sm font-bold text-slate-900">{category.categoryName} 로드맵</h1>
             <div className="h-9 w-9" />
-          </div>
-
-          {/* Category tabs */}
-          <div className="hide-scrollbar flex gap-2 overflow-x-auto px-4 pb-3">
-            {MOCK_CATEGORY_CHAPTERS.map((cat) => (
-              <Button
-                key={cat.categoryId}
-                variant={selectedCategoryId === cat.categoryId ? "default" : "secondary"}
-                onClick={() => setSelectedCategoryId(cat.categoryId)}
-                className={`h-9 whitespace-nowrap rounded-full px-4 text-xs font-bold transition-all ${
-                  selectedCategoryId === cat.categoryId
-                    ? "bg-slate-900 text-white"
-                    : "bg-slate-100 text-slate-500 hover:bg-slate-200 border-none"
-                }`}
-              >
-                {cat.emoji} {cat.categoryName}
-              </Button>
-            ))}
           </div>
         </div>
 
@@ -215,7 +195,7 @@ export default function ChapterList({ initialCategoryId, onBack, onSelectChapter
           <div className="relative mx-auto w-full" style={{ height: roadmapH }}>
             <RoadmapCurve count={count} totalH={roadmapH} />
 
-            {category.chapters.map((chapter, i) => (
+            {reversedChapters.map((chapter, i) => (
               <div
                 key={chapter.id}
                 className="absolute"

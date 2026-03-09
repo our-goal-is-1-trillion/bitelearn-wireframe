@@ -8,7 +8,7 @@ import { MOCK_CHOICE_QUESTION_SET } from "@/data/mock/choiceQuestion"
 import type { StepIndicatorInfo } from "@/components/features/choiceQuestion/ChoiceQuestionIndicator"
 
 // ─── Types ──────────────────────────────────────────────────
-type ChapterPhase = "words" | "quiz" | "done"
+type ChapterPhase = "intro" | "words" | "quiz" | "done"
 
 type ChapterPlayerProps = {
   onComplete: (total: number, correct: number) => void
@@ -18,6 +18,43 @@ type ChapterPlayerProps = {
 // ─── Constants ──────────────────────────────────────────────
 const WORD_QUESTIONS = MOCK_CHOICE_QUESTION_SET.questions.filter((q) => q.type === "word")
 const QUIZ_QUESTIONS = MOCK_CHOICE_QUESTION_SET.questions.filter((q) => q.type === "quiz")
+
+// ─── Chapter Intro Screen ────────────────────────────────────
+function ChapterIntroScreen({
+  chapterTitle,
+  onStart,
+}: {
+  chapterTitle: string
+  onStart: () => void
+}) {
+  return (
+    <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900">
+      <div className="flex h-full flex-col items-center justify-center border border-slate-200 px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="flex w-full flex-col items-center text-center"
+        >
+          <div className="w-full flex-1 flex flex-col items-center justify-center space-y-4 my-24">
+            <h1 className="text-lg font-bold leading-tight tracking-tight text-slate-500">이번 챕터에서는</h1>
+            <p className="text-[22px] font-bold leading-relaxed text-slate-900 break-keep px-4">
+              "{chapterTitle}"
+            </p>
+            <p className="text-sm font-medium leading-relaxed text-slate-400 break-keep mt-2">
+              기본적인 단어부터 실전 상황까지<br />순서대로 학습해보세요.
+            </p>
+          </div>
+          
+          <Button className="w-full h-14 rounded-2xl bg-indigo-600 outline-none hover:bg-indigo-600 text-base font-bold text-white shadow-lg active:scale-95 transition-all" onClick={onStart}>
+            학습 시작하기
+          </Button>
+        </motion.div>
+      </div>
+    </main>
+  )
+}
+
 
 // ─── Chapter Done Screen ─────────────────────────────────────
 function ChapterDoneScreen({
@@ -76,7 +113,7 @@ function ChapterDoneScreen({
 
 // ─── Main ChapterPlayer ────────────────────────────────────
 export default function ChapterPlayer({ onComplete, onBack }: ChapterPlayerProps) {
-  const initialPhase: ChapterPhase = WORD_QUESTIONS.length > 0 ? "words" : "quiz"
+  const initialPhase: ChapterPhase = "intro"
   const [chapterPhase, setChapterPhase] = useState<ChapterPhase>(initialPhase)
   const [quizResult, setQuizResult] = useState<{ total: number; correct: number } | null>(null)
   const [wordIdx, setWordIdx] = useState(0)
@@ -110,10 +147,20 @@ export default function ChapterPlayer({ onComplete, onBack }: ChapterPlayerProps
     )
   }
 
+  if (chapterPhase === "intro") {
+    return (
+      <ChapterIntroScreen
+        chapterTitle={MOCK_CHOICE_QUESTION_SET.title}
+        onStart={() => setChapterPhase(WORD_QUESTIONS.length > 0 ? "words" : "quiz")}
+      />
+    )
+  }
+
   if (chapterPhase === "quiz") {
     return (
       <QuizPlayer
         questions={QUIZ_QUESTIONS}
+        headerTitle={MOCK_CHOICE_QUESTION_SET.title}
         onBack={WORD_QUESTIONS.length > 0 ? () => setChapterPhase("words") : onBack}
         onComplete={(total, correct) => {
           setQuizResult({ total, correct })
@@ -130,6 +177,7 @@ export default function ChapterPlayer({ onComplete, onBack }: ChapterPlayerProps
   return (
     <WordCardsPlayer
       words={WORD_QUESTIONS}
+      headerTitle={MOCK_CHOICE_QUESTION_SET.title}
       wordIdx={wordIdx}
       onWordIdxChange={setWordIdx}
       onComplete={() => setChapterPhase("quiz")}

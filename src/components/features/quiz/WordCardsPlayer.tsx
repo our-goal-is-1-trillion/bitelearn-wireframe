@@ -10,6 +10,7 @@ import type { ChoiceQuestionItem } from "@/data/mock/choiceQuestion"
 
 type WordCardsPlayerProps = {
   words: ChoiceQuestionItem[]
+  headerTitle?: string
   /** 외부에서 관리되는 현재 단어 인덱스 */
   wordIdx: number
   onWordIdxChange: (idx: number) => void
@@ -21,6 +22,7 @@ type WordCardsPlayerProps = {
 
 export default function WordCardsPlayer({ 
   words, 
+  headerTitle,
   wordIdx, 
   onWordIdxChange, 
   onComplete, 
@@ -92,7 +94,7 @@ export default function WordCardsPlayer({
     <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-slate-50 text-slate-900 flex flex-col border border-slate-200 shadow-xl">
       {/* 1. Header Area */}
       <div className="shrink-0 bg-white z-20 border-b border-slate-100">
-        <QuizHeader title="생존 단어장" showCloseButton onCloseClick={onBack} />
+        <QuizHeader title={headerTitle || "생존 단어장"} showCloseButton onCloseClick={onBack} />
         <ChoiceQuestionIndicator steps={indicatorSteps} />
       </div>
 
