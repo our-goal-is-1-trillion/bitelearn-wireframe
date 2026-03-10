@@ -31,6 +31,8 @@ import ChapterList from "@/components/features/chapter/ChapterList"
 import LearningNote from "@/pages/LearningNote"
 import LearningHome from "@/components/features/chapter/LearningHome"
 import ChapterPlayer from "@/components/features/chapter/ChapterPlayer"
+import UserStories from "@/pages/UserStories"
+import FunctionalSpec from "@/pages/FunctionalSpec"
 
 export type QuizResultData = {
   total: number
@@ -67,6 +69,8 @@ export type Page =
   | "mistakeNote"
   | "learningHome"
   | "chapterPlayer"
+  | "userStories"
+  | "functionalSpec"
 
 type TransitionStage = "idle" | "out" | "in"
 
@@ -287,6 +291,12 @@ export default function App() {
 
       case "mistakeNote":
         return <LearningNote onTabClick={handleTabClick} />
+
+      case "userStories":
+        return <UserStories onBack={() => handleNavigate("home")} />
+
+      case "functionalSpec":
+        return <FunctionalSpec onBack={() => handleNavigate("home")} />
 
       default:
         return <Home onNavigate={handleNavigate} />

@@ -2,6 +2,7 @@ import { useState } from "react"
 import OnboardingModal from "@/components/features/onboarding/OnboardingModal"
 import { ChevronRight, Folder, FileText, PlayCircle } from "lucide-react"
 import type { Page } from "@/App" // Import common Page type
+import { Button } from "@/components/ui/button"
 
 type IAAction = "onboarding"
 
@@ -139,12 +140,29 @@ export default function Home({ onNavigate }: HomeProps) {
 
   return (
     <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-white text-slate-900 flex flex-col border border-slate-200 shadow-2xl">
-      <header className="shrink-0 bg-slate-50/50 border-b border-slate-100 px-6 py-8">
-        <div className="flex items-center gap-2 mb-1">
+      <header className="shrink-0 bg-slate-50 border-b border-slate-100 flex flex-col gap-4 px-6 py-6">
+        <div className="flex items-center gap-2">
            <div className="h-2.5 w-2.5 rounded-full bg-slate-900" />
-           <h1 className="text-xl font-bold tracking-tight text-slate-900 uppercase">BiteLearn IA</h1>
+           <h1 className="text-xl font-bold tracking-tight text-slate-900">BiteLearn IA</h1>
         </div>
-        <p className="text-xs font-medium text-slate-400 tracking-tight">Information Architecture & Navigation Flow</p>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline"
+            onClick={() => onNavigate("userStories")}
+            className="flex-1"
+          >
+            <FileText size={16} className="mr-2" />
+            유저 스토리
+          </Button>
+          <Button 
+            variant="outline"
+            onClick={() => onNavigate("functionalSpec")}
+            className="flex-1"
+          >
+            <FileText size={16} className="mr-2" />
+            기능 명세서
+          </Button>
+        </div>
       </header>
 
       <section className="flex-1 overflow-y-auto hide-scrollbar px-6 py-6 bg-[radial-gradient(#f1f5f9_1.5px,transparent_1.5px)] [background-size:24px_24px]">

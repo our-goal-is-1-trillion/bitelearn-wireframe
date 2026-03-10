@@ -150,8 +150,8 @@ function StageNode({
 export default function ChapterList({ initialCategoryId, onBack, onSelectChapter, onTabClick }: ChapterListProps) {
   const category = MOCK_CATEGORY_CHAPTERS.find((c) => c.categoryId === (initialCategoryId || "real-estate")) ?? MOCK_CATEGORY_CHAPTERS[0]
   const progressPercent = Math.round((category.completedChapters / category.totalChapters) * 100)
-  const reversedChapters = [...category.chapters].reverse()
-  const count = reversedChapters.length
+  const displayChapters = category.chapters
+  const count = displayChapters.length
 
   // Total height of the roadmap canvas:
   // first node center at HALF_BTN, last at (count-1)*STEP_Y + HALF_BTN,
@@ -207,7 +207,7 @@ export default function ChapterList({ initialCategoryId, onBack, onSelectChapter
           <div className="relative mx-auto w-full" style={{ height: roadmapH }}>
             <RoadmapCurve count={count} totalH={roadmapH} />
 
-            {reversedChapters.map((chapter, i) => (
+            {displayChapters.map((chapter, i) => (
               <div
                 key={chapter.id}
                 className="absolute"

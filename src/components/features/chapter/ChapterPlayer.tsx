@@ -57,16 +57,6 @@ function ChapterIntroScreen({
              <div className="h-px w-full bg-slate-100" />
 
              <div className="flex gap-4">
-               <div className="text-2xl pt-0.5">🪙</div>
-               <div>
-                 <p className="text-[11px] font-bold text-slate-400">완료 보상</p>
-                 <p className="text-[13px] font-bold text-orange-600 mt-0.5">+50 B 획득 가능</p>
-               </div>
-             </div>
-
-             <div className="h-px w-full bg-slate-100" />
-
-             <div className="flex gap-4">
                <div className="text-2xl pt-0.5">📖</div>
                <div>
                  <p className="text-[11px] font-bold text-slate-400">핵심 내용</p>
