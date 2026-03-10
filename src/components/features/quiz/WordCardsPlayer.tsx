@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { motion, AnimatePresence, type Variants } from "framer-motion"
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence, useMotionValue, useTransform, type Variants } from "framer-motion"
 import { MousePointerClick } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import QuizHeader from "@/components/layout/QuizHeader"
@@ -33,6 +33,13 @@ export default function WordCardsPlayer({
   const [wordFlipped, setWordFlipped] = useState(false)
   const [wordDirection, setWordDirection] = useState(1)
   const [showBriefing, setShowBriefing] = useState(false)
+
+  const dragX = useMotionValue(0)
+  const cardRotate = useTransform(dragX, [-150, 0, 150], [-8, 0, 8])
+  const knewLabelOpacity = useTransform(dragX, [30, 90], [0, 1])
+  const skipLabelOpacity = useTransform(dragX, [-90, -30], [1, 0])
+
+  useEffect(() => { dragX.set(0) }, [wordIdx, dragX])
 
   const currentWord = words[wordIdx]
   const isFirstWord = wordIdx === 0
@@ -142,18 +149,51 @@ export default function WordCardsPlayer({
             exit="exit"
             className="w-full max-w-[320px] h-[480px] z-10 perspective-1000"
           >
-            <WordCard 
-              word={currentWord} 
-              isFlipped={wordFlipped} 
-              onFlip={() => setWordFlipped(!wordFlipped)} 
-            />
+            {/* Swipe drag wrapper */}
+            <motion.div
+              style={{ x: dragX, rotate: cardRotate }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(_, info) => {
+                const { offset, velocity } = info
+                if (offset.x < -80 || velocity.x < -500) {
+                  handleNext()
+                } else if ((offset.x > 80 || velocity.x > 500) && !isFirstWord) {
+                  handlePrev()
+                }
+              }}
+              className="relative w-full h-full"
+            >
+              {/* 알아요 label */}
+              <motion.div
+                style={{ opacity: knewLabelOpacity }}
+                className="pointer-events-none absolute top-5 left-4 z-20 -rotate-12 rounded-xl border-[2.5px] border-indigo-500 px-3 py-1"
+              >
+                <span className="text-sm font-extrabold text-indigo-600">알아요 ✓</span>
+              </motion.div>
+
+              {/* 다음 label */}
+              <motion.div
+                style={{ opacity: skipLabelOpacity }}
+                className="pointer-events-none absolute top-5 right-4 z-20 rotate-12 rounded-xl border-[2.5px] border-slate-400 px-3 py-1"
+              >
+                <span className="text-sm font-extrabold text-slate-500">다음 →</span>
+              </motion.div>
+
+              <WordCard
+                word={currentWord}
+                isFlipped={wordFlipped}
+                onFlip={() => setWordFlipped(!wordFlipped)}
+              />
+            </motion.div>
           </motion.div>
         </AnimatePresence>
 
         {/* Overlay Guide Text */}
         <div className="absolute bottom-10 inset-x-0 flex items-center justify-center pointer-events-none">
-          <AnimatePresence>
-            {!wordFlipped && (
+          <AnimatePresence mode="wait">
+            {!wordFlipped ? (
               <motion.div
                 key="flip-guide"
                 initial={{ opacity: 0, y: 10 }}
@@ -163,6 +203,16 @@ export default function WordCardsPlayer({
               >
                 <MousePointerClick size={16} />
                 <p className="text-sm font-bold tracking-tight">카드를 뒤집어 확인해 보세요</p>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="swipe-guide"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="flex items-center gap-1.5 text-slate-300"
+              >
+                <span className="text-xs font-bold tracking-tight">← 스와이프로도 넘길 수 있어요</span>
               </motion.div>
             )}
           </AnimatePresence>
