@@ -31,6 +31,8 @@ import ChapterList from "@/components/features/chapter/ChapterList"
 import LearningNote from "@/pages/LearningNote"
 import LearningHome from "@/components/features/chapter/LearningHome"
 import ChapterPlayer from "@/components/features/chapter/ChapterPlayer"
+import UserStories from "@/pages/UserStories"
+import FunctionalSpec from "@/pages/FunctionalSpec"
 
 export type QuizResultData = {
   total: number
@@ -54,6 +56,9 @@ export type Page =
   | "resultClose"
   | "resultFail"
   | "dashBoard"
+  | "dashBoardGuest"
+  | "dashBoardNew"
+  | "dashBoardActive"
   | "wordLearning"
   | "article"
   | "articleList"
@@ -64,6 +69,8 @@ export type Page =
   | "mistakeNote"
   | "learningHome"
   | "chapterPlayer"
+  | "userStories"
+  | "functionalSpec"
 
 type TransitionStage = "idle" | "out" | "in"
 
@@ -72,6 +79,7 @@ export default function App() {
   const [targetPage, setTargetPage] = useState<Page | null>(null)
   const [transitionStage, setTransitionStage] = useState<TransitionStage>("idle")
   const [quizResult, setQuizResult] = useState<QuizResultData | null>(null)
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("real-estate")
 
   useEffect(() => {
     if (transitionStage === "out" && targetPage) {
@@ -209,8 +217,15 @@ export default function App() {
         return <Result resultData={null} variant="fail" onFinish={() => handleNavigate("home")} />
 
       case "dashBoard":
+      case "dashBoardGuest":
+      case "dashBoardNew":
+      case "dashBoardActive": {
+        const _userType = page === "dashBoardGuest" ? "guest" 
+                        : page === "dashBoardNew" ? "new" 
+                        : "active"
         return (
           <DashboardHome
+            userType={_userType}
             tabs={DASHBOARD_TABS.map(t => ({ ...t, active: t.label === "홈" }))}
             categories={DASHBOARD_CATEGORIES}
             recommendations={DASHBOARD_TODAY_RECOMMENDATIONS}
@@ -219,14 +234,9 @@ export default function App() {
             onMoveToLogin={() => handleNavigate("login")}
             onMoveToArticle={(_articleId) => handleNavigate("article")}
             onTabClick={handleTabClick}
-            headerTitle="BiteLearn"
-            headerSubtitle="로그인하고 맞춤 학습을 시작해보세요."
-            continueHeadline="학습이 처음인 당신을 위해"
-            continueCategory="부동산 · 주거"
-            continueLessonTitle="전세사기 예방 기초"
-            continueMeta="처음 시작 · 약 5분"
           />
         )
+      }
 
       case "login":
         return (
@@ -250,7 +260,8 @@ export default function App() {
       case "learningHome":
         return (
           <LearningHome
-            onSelectCategory={(_categoryId) => {
+            onSelectCategory={(categoryId) => {
+              setSelectedCategoryId(categoryId)
               handleNavigate("chapterList")
             }}
             onTabClick={handleTabClick}
@@ -260,6 +271,7 @@ export default function App() {
       case "chapterList":
         return (
           <ChapterList
+            initialCategoryId={selectedCategoryId}
             onBack={() => handleNavigate("learningHome")}
             onSelectChapter={() => handleNavigate("chapterPlayer")}
             onTabClick={handleTabClick}
@@ -279,6 +291,12 @@ export default function App() {
 
       case "mistakeNote":
         return <LearningNote onTabClick={handleTabClick} />
+
+      case "userStories":
+        return <UserStories onBack={() => handleNavigate("home")} />
+
+      case "functionalSpec":
+        return <FunctionalSpec onBack={() => handleNavigate("home")} />
 
       default:
         return <Home onNavigate={handleNavigate} />
