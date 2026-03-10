@@ -79,6 +79,8 @@ export interface ChoiceQuestionItem {
 /** 전체 퀴즈 세트 */
 export interface ChoiceQuestionSet {
   title: string
+  missionTitle?: string
+  missionKeywords?: string[]
   questions: ChoiceQuestionItem[]
 }
 
@@ -86,6 +88,8 @@ export interface ChoiceQuestionSet {
 
 export const MOCK_CHOICE_QUESTION_SET: ChoiceQuestionSet = {
   title: "[2단계: 계약] 도장 찍기 전, 멍멍이의 마지막 방어선!",
+  missionTitle: "부동산 필수 개념 5개 완벽하게 마스터하기",
+  missionKeywords: ["LTV & DTI", "임대차 3법", "전세권"],
   questions: [
     // ────────────────────────────────────────────────────────
     // 1단계: 단어학습 (type: "word") - Q1 ~ Q5
