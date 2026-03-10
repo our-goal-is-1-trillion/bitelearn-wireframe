@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { motion } from "framer-motion"
 import { ChevronLeft, Check, Lock, GraduationCap, House, BookOpenCheck, FileText, UserRound } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -87,6 +86,7 @@ function StageNode({
 }) {
   const isCompleted = chapter.status === "completed"
   const isInProgress = chapter.status === "in_progress"
+  const isAvailable = chapter.status === "available"
   const isLocked = chapter.status === "locked"
 
   return (
@@ -96,30 +96,41 @@ function StageNode({
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: index * 0.05, type: "spring", stiffness: 260, damping: 22 }}
     >
-      <Button
-        disabled={isLocked}
-        onClick={onSelect}
-        variant={isInProgress ? "default" : "outline"}
-        className={`
-          relative z-10 flex h-20 w-20 items-center justify-center rounded-[28px] shadow-sm transition-all active:scale-95 border-2
-          ${isCompleted ? "bg-slate-900 border-slate-900 text-white" : ""}
-          ${isInProgress ? "bg-white border-slate-900 ring-4 ring-slate-100" : ""}
-          ${isLocked ? "bg-slate-50 border-slate-200 text-slate-300" : "bg-white border-slate-200"}
-        `}
-      >
-        {isCompleted ? (
-          <Check size={32} strokeWidth={3} />
-        ) : isLocked ? (
-          <Lock size={20} />
-        ) : (
-          <span className="text-3xl">{chapter.emoji}</span>
-        )}
+      <div className="relative">
         {isInProgress && (
-          <div className="absolute -top-2 -right-1 rounded-full bg-slate-900 px-2 py-0.5 text-[10px] font-bold text-white">
-            진행 중
-          </div>
+          <div className="absolute inset-0 rounded-[28px] bg-blue-400 opacity-20 animate-ping z-0" style={{ animationDuration: '2s' }} />
         )}
-      </Button>
+        <Button
+          disabled={isLocked}
+          onClick={onSelect}
+          variant="outline"
+          className={`
+            relative z-10 flex h-20 w-20 items-center justify-center rounded-[28px] shadow-sm transition-all active:scale-95 border-2
+            ${isCompleted ? "bg-slate-900 border-slate-900 text-white hover:bg-slate-800 hover:text-white" : ""}
+            ${isInProgress ? "bg-white border-blue-500 ring-4 ring-blue-50 hover:bg-slate-50" : ""}
+            ${isLocked ? "bg-slate-50 border-slate-200 text-slate-300" : (!isInProgress && !isCompleted) ? "bg-white border-slate-200 hover:bg-slate-50" : ""}
+          `}
+        >
+          {isCompleted ? (
+            <Check size={32} strokeWidth={3} />
+          ) : isLocked ? (
+            <Lock size={20} />
+          ) : (
+            <span className="text-3xl">{chapter.emoji}</span>
+          )}
+          
+          {isInProgress && (
+            <div className="absolute -top-3 -right-8 rounded-full bg-blue-600 px-2.5 py-1 text-[10px] font-black text-white shadow-md flex items-center gap-1 whitespace-nowrap">
+              <span className="animate-pulse">▶</span> 이어서 학습 중
+            </div>
+          )}
+          {isAvailable && (
+            <div className="absolute -top-2 -right-4 rounded-full bg-slate-800 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm whitespace-nowrap">
+              다음 챕터
+            </div>
+          )}
+        </Button>
+      </div>
 
       <div className="mt-3 max-w-[110px] text-center">
         <p className={`text-xs font-bold leading-tight ${isLocked ? "text-slate-400" : "text-slate-900"}`}>
@@ -137,11 +148,10 @@ function StageNode({
 
 // ─── Main component ──────────────────────────────────────────
 export default function ChapterList({ initialCategoryId, onBack, onSelectChapter, onTabClick }: ChapterListProps) {
-  const [selectedCategoryId, setSelectedCategoryId] = useState(initialCategoryId || "real-estate")
-
-  const category = MOCK_CATEGORY_CHAPTERS.find((c) => c.categoryId === selectedCategoryId)!
+  const category = MOCK_CATEGORY_CHAPTERS.find((c) => c.categoryId === (initialCategoryId || "real-estate")) ?? MOCK_CATEGORY_CHAPTERS[0]
   const progressPercent = Math.round((category.completedChapters / category.totalChapters) * 100)
-  const count = category.chapters.length
+  const displayChapters = category.chapters
+  const count = displayChapters.length
 
   // Total height of the roadmap canvas:
   // first node center at HALF_BTN, last at (count-1)*STEP_Y + HALF_BTN,
@@ -164,26 +174,8 @@ export default function ChapterList({ initialCategoryId, onBack, onSelectChapter
             >
               <ChevronLeft size={20} />
             </Button>
-            <h1 className="flex-1 text-center text-sm font-bold text-slate-900">학습 로드맵</h1>
+            <h1 className="flex-1 text-center text-sm font-bold text-slate-900">{category.categoryName} 로드맵</h1>
             <div className="h-9 w-9" />
-          </div>
-
-          {/* Category tabs */}
-          <div className="hide-scrollbar flex gap-2 overflow-x-auto px-4 pb-3">
-            {MOCK_CATEGORY_CHAPTERS.map((cat) => (
-              <Button
-                key={cat.categoryId}
-                variant={selectedCategoryId === cat.categoryId ? "default" : "secondary"}
-                onClick={() => setSelectedCategoryId(cat.categoryId)}
-                className={`h-9 whitespace-nowrap rounded-full px-4 text-xs font-bold transition-all ${
-                  selectedCategoryId === cat.categoryId
-                    ? "bg-slate-900 text-white"
-                    : "bg-slate-100 text-slate-500 hover:bg-slate-200 border-none"
-                }`}
-              >
-                {cat.emoji} {cat.categoryName}
-              </Button>
-            ))}
           </div>
         </div>
 
@@ -215,7 +207,7 @@ export default function ChapterList({ initialCategoryId, onBack, onSelectChapter
           <div className="relative mx-auto w-full" style={{ height: roadmapH }}>
             <RoadmapCurve count={count} totalH={roadmapH} />
 
-            {category.chapters.map((chapter, i) => (
+            {displayChapters.map((chapter, i) => (
               <div
                 key={chapter.id}
                 className="absolute"

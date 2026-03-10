@@ -2,6 +2,8 @@ import type { LucideIcon } from "lucide-react"
 
 export type DashboardView = "home" | "chapter"
 
+export type UserOnboardingType = 'guest' | 'new' | 'active'
+
 export type DashboardTab = {
   label: string
   icon: LucideIcon
