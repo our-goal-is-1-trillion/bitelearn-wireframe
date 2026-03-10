@@ -62,13 +62,15 @@ export default function DashboardHeader({
           </Button>
         ) : (
           <BadgeCollectionDialog>
-            <button
+            <Button
+              variant="outline"
+              size="icon"
               className="h-12 w-12 shrink-0 flex items-center justify-center rounded-2xl border-2 border-slate-100 bg-white shadow-sm text-2xl transition-all hover:bg-slate-50 active:scale-95"
               aria-label="뱃지 컬렉션 보기"
               title={badge.label}
             >
               {badge.icon}
-            </button>
+            </Button>
           </BadgeCollectionDialog>
         )}
       </div>

@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button"
 import type { DashboardTab } from "@/components/features/dashboard/dashboard.types"
 
 type DashboardBottomNavProps = {
@@ -17,12 +18,12 @@ export default function DashboardBottomNav({ tabs, onTabClick }: DashboardBottom
             const Icon = tab.icon
             return (
               <li key={tab.label} className="flex-1">
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
                   onClick={() => onTabClick?.(tab.label)}
-                  className={`flex w-full flex-col items-center justify-center gap-1.5 rounded-[24px] py-3.5 transition-all active:scale-95 ${
+                  className={`flex h-auto w-full flex-col items-center justify-center gap-1.5 rounded-[24px] py-3.5 transition-all active:scale-95 ${
                     tab.active 
-                      ? "bg-slate-900 text-white shadow-md shadow-slate-400/20" 
+                      ? "bg-slate-900 text-white shadow-md shadow-slate-400/20 hover:bg-slate-800 hover:text-white" 
                       : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
                   }`}
                 >
@@ -30,7 +31,7 @@ export default function DashboardBottomNav({ tabs, onTabClick }: DashboardBottom
                   <span className={`text-xs font-bold uppercase tracking-tighter ${tab.active ? "opacity-100" : "opacity-80"}`}>
                     {tab.label}
                   </span>
-                </button>
+                </Button>
               </li>
             )
           })}

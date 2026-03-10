@@ -1,4 +1,5 @@
 import { Camera, ChevronLeft, ChevronRight, Pencil } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 type AccountInfoPageProps = {
   onBack: () => void
@@ -8,14 +9,15 @@ export default function AccountInfoPage({ onBack }: AccountInfoPageProps) {
   return (
     <section className="relative h-full overflow-y-auto pb-24">
       <header className="absolute left-0 right-0 top-0 z-20 flex h-14 items-center justify-between border-b border-slate-100 bg-white/90 px-2 backdrop-blur-md">
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={onBack}
-          className="flex h-10 w-10 items-center justify-center rounded-full text-slate-800 transition-colors hover:bg-slate-100"
+          className="h-10 w-10 shrink-0 rounded-full text-slate-800 hover:bg-slate-100 transition-colors"
           aria-label="마이페이지로 돌아가기"
         >
           <ChevronLeft className="h-6 w-6" />
-        </button>
+        </Button>
         <h1 className="absolute left-1/2 -translate-x-1/2 text-sm font-medium text-slate-900">계정 정보</h1>
         <div className="h-10 w-10" />
       </header>
@@ -28,23 +30,25 @@ export default function AccountInfoPage({ onBack }: AccountInfoPageProps) {
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl">
                   👤
                 </div>
-                <button
-                  type="button"
+                <Button
+                  variant="outline"
+                  size="icon"
                   aria-label="프로필 이미지 변경하기"
-                  className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm"
+                  className="absolute -bottom-1 -right-1 h-7 w-7 rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm hover:text-slate-900 hover:bg-slate-50"
                 >
                   <Camera className="h-3.5 w-3.5" />
-                </button>
+                </Button>
               </div>
               <div className="flex items-center gap-1">
                 <p className="rounded-full px-1 py-1 text-md text-bold text-slate-700">BiteLearn</p>
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="icon"
                   aria-label="닉네임 변경하기"
-                  className="flex items-center justify-center text-slate-600"
+                  className="h-6 w-6 rounded-full text-slate-400 hover:text-slate-900 hover:bg-slate-100"
                 >
                   <Pencil className="h-3.5 w-3.5" />
-                </button>
+                </Button>
               </div>
             </div>
           </article>
@@ -70,18 +74,18 @@ export default function AccountInfoPage({ onBack }: AccountInfoPageProps) {
           <article className="px-4 py-6">
           <h2 className="text-sm font-semibold">계정 관리</h2>
           <div className="mt-4 flex flex-col gap-3 pb-4">
-            <button
-              type="button"
-              className="w-full rounded-full px-1 py-1 text-left text-xs text-slate-700"
+            <Button
+              variant="secondary"
+              className="w-full rounded-2xl bg-slate-100 text-sm font-bold text-slate-700 hover:bg-slate-200 h-12"
             >
               로그아웃
-            </button>
-            <button
-              type="button"
-              className="w-full rounded-full px-1 py-1 text-left text-xs text-slate-700"
+            </Button>
+            <Button
+              variant="destructive"
+              className="w-full rounded-2xl border border-red-100 bg-red-50 text-sm font-bold text-red-600 hover:bg-red-100 shadow-none h-12"
             >
               회원 탈퇴
-            </button>
+            </Button>
           </div>
           </article>
         </section>

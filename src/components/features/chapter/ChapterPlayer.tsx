@@ -37,7 +37,7 @@ function ChapterIntroScreen({
           className="flex w-full flex-col items-center text-center mt-12"
         >
           <div className="mb-8">
-            <span className="inline-block rounded-full bg-indigo-50 px-3 py-1 text-[10px] font-black tracking-widest text-indigo-600 mb-4">
+            <span className="inline-block rounded-full bg-slate-100 border border-slate-200 px-3 py-1 text-[10px] font-black tracking-widest text-slate-600 mb-4 shadow-sm">
               CHAPTER MISSION
             </span>
             <p className="text-[22px] font-bold leading-snug text-slate-900 break-keep px-2">
@@ -76,7 +76,7 @@ function ChapterIntroScreen({
            transition={{ duration: 0.4, delay: 0.1 }}
            className="w-full"
         >
-          <Button className="w-full h-14 rounded-2xl bg-indigo-600 outline-none hover:bg-indigo-700 text-base font-bold text-white shadow-lg shadow-indigo-200 active:scale-95 transition-all" onClick={onStart}>
+          <Button size="lg" className="w-full h-14 rounded-2xl text-base font-bold shadow-lg shadow-slate-200 active:scale-95 transition-all" onClick={onStart}>
             미션 시작하기
           </Button>
         </motion.div>

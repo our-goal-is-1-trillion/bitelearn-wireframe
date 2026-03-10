@@ -105,16 +105,18 @@ function TreeItem({
         </div>
 
         {isClickable && (
-          <button
+          <Button
+            size="sm"
+            variant="outline"
             onClick={() => {
               if (node.action === "onboarding") setShowOnboarding(true)
               else if (node.page) onNavigate(node.page)
             }}
-            className="shrink-0 flex items-center gap-1 rounded-md bg-slate-50 border border-slate-200 px-2 py-1 text-[10px] font-bold text-slate-500 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all"
+            className="h-6 shrink-0 flex items-center gap-1 rounded-md bg-slate-50 border border-slate-200 px-2 py-0 text-[10px] font-bold text-slate-500 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all shadow-none"
           >
             {node.action ? <PlayCircle size={10} /> : <ChevronRight size={10} />}
             GO
-          </button>
+          </Button>
         )}
       </div>
 

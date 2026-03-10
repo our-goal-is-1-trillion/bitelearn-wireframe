@@ -64,26 +64,26 @@ export default function Mypage({ onTabClick }: MypageProps) {
 
       <section className="hide-scrollbar h-full overflow-y-auto px-5 pb-24 pt-20">
 
-        <button
-          type="button"
+        <div
+          role="button"
           onClick={() => setCurrentPage("accountInfo")}
-          className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left shadow-sm"
+          className="w-full rounded-[24px] border border-slate-200 bg-slate-50 p-5 text-left shadow-sm transition-all hover:bg-slate-100 active:scale-[0.98]"
         >
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-indigo-100 text-xl">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-2xl shadow-sm border border-slate-200">
                 👤
               </div>
               <div>
-                <p className="text-lg font-bold">BiteLearn님</p>
-                <p className="text-sm text-slate-600">bitelearn@bitelearn.com</p>
+                <p className="text-lg font-bold text-slate-900">BiteLearn님</p>
+                <p className="text-[13px] font-medium text-slate-500">bitelearn@bitelearn.com</p>
               </div>
             </div>
-            <div className="items-center justify-center">
-              <ChevronRight className="h-5 w-5 text-slate-500" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-slate-400">
+              <ChevronRight className="h-5 w-5" />
             </div>
           </div>
-        </button>
+        </div>
 
         <section className="mt-5">
           <article className="px-4 py-4">

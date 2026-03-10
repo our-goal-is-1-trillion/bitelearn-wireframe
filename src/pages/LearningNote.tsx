@@ -44,17 +44,18 @@ export default function LearningNote({ onTabClick }: { onTabClick: (label: strin
         <header className="shrink-0 bg-white border-b border-slate-100">
           <div className="flex pt-12">
             {(["review", "bookmark"] as NoteTab[]).map((tab) => (
-              <button
+              <Button
                 key={tab}
+                variant="ghost"
                 onClick={() => setActiveTab(tab)}
-                className={`flex-1 py-3.5 text-sm font-bold transition-all border-b-2 ${
+                className={`flex-1 rounded-none py-6 text-sm font-bold transition-all border-b-2 hover:bg-slate-50 ${
                   activeTab === tab
                     ? "border-slate-900 text-slate-900"
                     : "border-transparent text-slate-400"
                 }`}
               >
                 {tab === "review" ? "오답 복습" : "저장한 글"}
-              </button>
+              </Button>
             ))}
           </div>
         </header>
@@ -97,17 +98,18 @@ export default function LearningNote({ onTabClick }: { onTabClick: (label: strin
                 {/* 카테고리 필터 칩 */}
                 <div className="hide-scrollbar flex gap-2 overflow-x-auto px-6 py-3 border-b border-slate-50">
                   {[{ categoryId: "all", categoryName: "전체" }, ...MOCK_CATEGORY_CHAPTERS].map((cat) => (
-                    <button
+                    <Button
                       key={cat.categoryId}
+                      variant={selectedCategoryId === cat.categoryId ? "default" : "secondary"}
                       onClick={() => setSelectedCategoryId(cat.categoryId)}
-                      className={`shrink-0 rounded-full px-3 py-1.5 text-[11px] font-bold transition-all ${
+                      className={`shrink-0 rounded-full h-8 px-4 text-[11px] font-bold transition-all ${
                         selectedCategoryId === cat.categoryId
-                          ? "bg-slate-900 text-white"
-                          : "bg-slate-100 text-slate-500"
+                          ? "bg-slate-900 text-white shadow-sm hover:bg-slate-800"
+                          : "bg-slate-100 text-slate-500 hover:bg-slate-200"
                       }`}
                     >
                       {cat.categoryName}
-                    </button>
+                    </Button>
                   ))}
                 </div>
 
