@@ -33,6 +33,7 @@ import LearningHome from "@/components/features/chapter/LearningHome"
 import ChapterPlayer from "@/components/features/chapter/ChapterPlayer"
 import UserStories from "@/pages/UserStories"
 import FunctionalSpec from "@/pages/FunctionalSpec"
+import AppGallery from "@/pages/AppGallery"
 
 export type QuizResultData = {
   total: number
@@ -71,6 +72,7 @@ export type Page =
   | "chapterPlayer"
   | "userStories"
   | "functionalSpec"
+  | "gallery"
 
 type TransitionStage = "idle" | "out" | "in"
 
@@ -297,6 +299,9 @@ export default function App() {
 
       case "functionalSpec":
         return <FunctionalSpec onBack={() => handleNavigate("home")} />
+
+      case "gallery":
+        return <AppGallery onBack={() => handleNavigate("home")} />
 
       default:
         return <Home onNavigate={handleNavigate} />

@@ -3,9 +3,10 @@ import { MOCK_CHOICE_QUESTION_SET } from "@/data/mock/choiceQuestion"
 
 type ConversationQuestionProps = {
   onComplete?: (total: number, correctCount: number) => void
+  demoState?: React.ComponentProps<typeof QuizPlayer>["demoState"]
 }
 
-export default function ConversationQuestion({ onComplete }: ConversationQuestionProps) {
+export default function ConversationQuestion({ onComplete, demoState }: ConversationQuestionProps) {
   const questions = MOCK_CHOICE_QUESTION_SET.questions.filter(
     (q) => q.passageMode === "conversation"
   )
@@ -19,6 +20,7 @@ export default function ConversationQuestion({ onComplete }: ConversationQuestio
       questions={fallback}
       headerTitle="상황형 퀴즈"
       onComplete={(total, correct) => onComplete?.(total, correct)}
+      demoState={demoState}
     />
   )
 }

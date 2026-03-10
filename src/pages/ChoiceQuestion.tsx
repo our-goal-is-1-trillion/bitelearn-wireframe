@@ -3,9 +3,10 @@ import { MOCK_CHOICE_QUESTION_SET } from "@/data/mock/choiceQuestion"
 
 type ChoiceQuestionProps = {
   onComplete?: (total: number, correctCount: number) => void
+  demoState?: React.ComponentProps<typeof QuizPlayer>["demoState"]
 }
 
-export default function ChoiceQuestion({ onComplete }: ChoiceQuestionProps) {
+export default function ChoiceQuestion({ onComplete, demoState }: ChoiceQuestionProps) {
   const questions = MOCK_CHOICE_QUESTION_SET.questions.filter(
     (q) => q.type === "quiz" && q.choiceMode === "multiple"
   )
@@ -15,6 +16,7 @@ export default function ChoiceQuestion({ onComplete }: ChoiceQuestionProps) {
       questions={questions}
       headerTitle="지문형 퀴즈"
       onComplete={(total, correct) => onComplete?.(total, correct)}
+      demoState={demoState}
     />
   )
 }

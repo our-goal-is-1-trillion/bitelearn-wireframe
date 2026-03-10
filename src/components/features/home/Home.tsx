@@ -168,6 +168,18 @@ export default function Home({ onNavigate }: HomeProps) {
       </header>
 
       <section className="flex-1 overflow-y-auto hide-scrollbar px-6 py-6 bg-[radial-gradient(#f1f5f9_1.5px,transparent_1.5px)] [background-size:24px_24px]">
+        {/* App Gallery CTA */}
+        <div className="mb-6 flex">
+           <Button 
+            variant="outline"
+            onClick={() => onNavigate("gallery")}
+            className="flex-1 h-12 shadow-sm bg-white"
+          >
+            <FileText size={16} className="mr-2 text-slate-500" />
+            앱 갤러리 띄우기 →
+          </Button>
+        </div>
+
         <div className="rounded-[32px] border-2 border-slate-100 bg-white/90 backdrop-blur-sm p-6 shadow-xl shadow-slate-200/30">
           <div className="flex flex-col gap-2">
             {IA_STRUCTURE.map((section, i) => (

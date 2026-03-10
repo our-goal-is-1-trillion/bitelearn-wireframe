@@ -3,9 +3,10 @@ import { MOCK_CHOICE_QUESTION_SET } from "@/data/mock/choiceQuestion"
 
 type OxQuestionProps = {
   onComplete?: (total: number, correctCount: number) => void
+  demoState?: React.ComponentProps<typeof QuizPlayer>["demoState"]
 }
 
-export default function OxQuestion({ onComplete }: OxQuestionProps) {
+export default function OxQuestion({ onComplete, demoState }: OxQuestionProps) {
   const questions = MOCK_CHOICE_QUESTION_SET.questions.filter(
     (q) => q.type === "quiz" && q.choiceMode === "ox"
   )
@@ -23,6 +24,7 @@ export default function OxQuestion({ onComplete }: OxQuestionProps) {
       questions={questions}
       headerTitle="OX 퀴즈"
       onComplete={(total, correct) => onComplete?.(total, correct)}
+      demoState={demoState}
     />
   )
 }

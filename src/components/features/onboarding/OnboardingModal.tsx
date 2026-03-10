@@ -31,7 +31,7 @@ export default function OnboardingModal({
   const imageSrc = `${baseUrl}${currentData.image}`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 sm:p-0">
+    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 p-4 sm:p-0">
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}

@@ -32,6 +32,11 @@ export type QuizPlayerProps = {
   onCurrentIndexChange?: (idx: number) => void
   /** 정오답 메트릭 변경 알림 (ChapterPlayer 통합 인디케이터용) */
   onMetricsChange?: (metrics: ("none" | "correct" | "incorrect")[]) => void
+  /** 앱 갤러리 강제 렌더링용 mock 상태 */
+  demoState?: {
+    phase: "passage" | "choices" | "result"
+    isCorrect?: boolean
+  }
 }
 
 function getSectionLabel(q: ChoiceQuestionItem): string {
@@ -122,13 +127,24 @@ function DocumentResultView({
 }
 
 // ── Main QuizPlayer ───────────────────────────────────────
-export default function QuizPlayer({ questions, headerTitle, onBack, onComplete, indicatorSteps: externalSteps, onCurrentIndexChange, onMetricsChange }: QuizPlayerProps) {
+export default function QuizPlayer({ questions, headerTitle, onBack, onComplete, indicatorSteps: externalSteps, onCurrentIndexChange, onMetricsChange, demoState }: QuizPlayerProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [phase, setPhase] = useState<Phase>("passage")
-  const [selectedChoice, setSelectedChoice] = useState("")
-  const [metrics, setMetrics] = useState<("none" | "correct" | "incorrect")[]>(
-    Array(questions.length).fill("none")
-  )
+  const [phase, setPhase] = useState<Phase>(demoState?.phase ?? "passage")
+  
+  // demoState가 result일 경우 임의의 선택값 지정
+  const mockSelectedChoice = demoState?.isCorrect
+    ? String(questions[0].correctIndex)
+    : String(questions[0].correctIndex === 0 ? 1 : 0) // 오답 선택
+
+  const [selectedChoice, setSelectedChoice] = useState(demoState?.phase === "result" ? mockSelectedChoice : "")
+  
+  const [metrics, setMetrics] = useState<("none" | "correct" | "incorrect")[]>(() => {
+    const arr = Array(questions.length).fill("none")
+    if (demoState?.phase === "result") {
+      arr[0] = demoState.isCorrect ? "correct" : "incorrect"
+    }
+    return arr
+  })
   const [seenPassages, setSeenPassages] = useState<Set<number>>(new Set())
 
   if (questions.length === 0) {

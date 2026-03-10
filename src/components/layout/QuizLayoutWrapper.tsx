@@ -13,13 +13,19 @@ type QuizLayoutWrapperProps = {
   children: ReactNode
   currentVariant: QuizVariant
   onVariantChange: (variant: QuizVariant) => void
+  hideMockup?: boolean
 }
 
 export default function QuizLayoutWrapper({
   children,
   currentVariant,
   onVariantChange,
+  hideMockup = false,
 }: QuizLayoutWrapperProps) {
+  if (hideMockup) {
+    return <>{children}</>
+  }
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 py-10">
       {/* 화면 전체 프레임 외부 중앙 배치 */}

@@ -19,6 +19,11 @@ type WordCardsPlayerProps = {
   onBack: () => void
   /** ChapterPlayer에서 내려오는 통합 인디케이터 (미제공 시 로컬 계산) */
   indicatorSteps?: StepIndicatorInfo[]
+  /** 앱 갤러리 렌더링용 강제 상태 */
+  demoState?: {
+    showBriefing?: boolean
+    isFlipped?: boolean
+  }
 }
 
 export default function WordCardsPlayer({ 
@@ -28,11 +33,12 @@ export default function WordCardsPlayer({
   onWordIdxChange, 
   onComplete, 
   onBack, 
-  indicatorSteps: externalSteps 
+  indicatorSteps: externalSteps,
+  demoState 
 }: WordCardsPlayerProps) {
-  const [wordFlipped, setWordFlipped] = useState(false)
+  const [wordFlipped, setWordFlipped] = useState(demoState?.isFlipped ?? false)
   const [wordDirection, setWordDirection] = useState(1)
-  const [showBriefing, setShowBriefing] = useState(false)
+  const [showBriefing, setShowBriefing] = useState(demoState?.showBriefing ?? false)
 
   const dragX = useMotionValue(0)
   const cardRotate = useTransform(dragX, [-150, 0, 150], [-8, 0, 8])
