@@ -1,7 +1,8 @@
 import { motion } from "framer-motion"
-import { ChevronLeft, Share2, Bookmark, CheckCircle2 } from "lucide-react"
+import { ChevronLeft, Share2, Bookmark, CheckCircle2, ChevronDown } from "lucide-react"
 import { mockArticles } from "@/data/mock/article"
 import type { ContentBlock } from "@/data/mock/article"
+import { useState } from "react"
 
 // 날짜 포맷팅 유틸리티
 const formatDate = (isoString: string) => {
@@ -19,12 +20,19 @@ export default function ArticleDetail({ onBack, articleId }: ArticleDetailProps)
   const currentId = articleId ?? mockArticles[0].articleId
   const article = mockArticles.find((a) => a.articleId === currentId)
 
+  // FAQ 아코디언 상태
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null)
+
   if (!article) {
     return (
       <div className="flex h-[812px] w-[375px] mx-auto items-center justify-center bg-slate-50 text-slate-500">
         아티클을 찾을 수 없습니다.
       </div>
     )
+  }
+
+  const toggleFaq = (index: number) => {
+    setOpenFaqIndex(openFaqIndex === index ? null : index)
   }
 
   // 본문 블록 렌더링 함수
@@ -197,6 +205,43 @@ export default function ArticleDetail({ onBack, articleId }: ArticleDetailProps)
             ))}
           </div>
         </section>
+
+        {/* 6. FAQ 아코디언 (자주 묻는 질문) */}
+        {article.faqs && article.faqs.length > 0 && (
+          <section className="bg-slate-50 px-5 py-10 border-t border-slate-100">
+            <h3 className="mb-6 text-[20px] font-bold text-slate-900 flex items-center gap-2">
+              <span className="text-2xl">💡</span> 궁금증을 해결해드릴게요!
+            </h3>
+            <div className="flex flex-col gap-3">
+              {article.faqs.map((faq, idx) => {
+                const isOpen = openFaqIndex === idx;
+                // 간단 파싱 로직
+                const answerParts = faq.answer.split(/\*\*(.*?)\*\*/g)
+
+                return (
+                  <div key={idx} className={`overflow-hidden rounded-xl border bg-white transition-colors ${isOpen ? 'border-indigo-200 shadow-sm' : 'border-slate-200'}`}>
+                    <button
+                      onClick={() => toggleFaq(idx)}
+                      className="flex w-full items-center justify-between p-4 text-left"
+                    >
+                      <span className="text-[15px] font-bold text-slate-800 pr-4 leading-snug">{faq.question}</span>
+                      <ChevronDown className={`h-5 w-5 shrink-0 text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180 text-indigo-500' : ''}`} />
+                    </button>
+                    {isOpen && (
+                      <div className="px-4 pb-4 pt-1">
+                        <p className="text-[15px] leading-relaxed text-slate-600 word-break-keep">
+                          {answerParts.map((part, index) =>
+                            index % 2 === 1 ? <strong key={index} className="font-bold text-indigo-600">{part}</strong> : <span key={index}>{part}</span>
+                          )}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </section>
+        )}
       </main>
 
       {/* 7. 최하단 CTA (Call To Action) 배너/버튼 고정 */}
