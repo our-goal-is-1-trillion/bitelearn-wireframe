@@ -5,6 +5,10 @@ export type ContentBlock =
   | { type: "list"; listType: "unordered" | "ordered"; items: string[] }
   | { type: "quote"; content: string }
 
+export type ArticleCategory = "전체" | "부동산/주거" | "금융/자산" | "세금/연말정산"
+
+export const ARTICLE_CATEGORIES: ArticleCategory[] = ["전체", "부동산/주거", "금융/자산", "세금/연말정산"]
+
 export interface ArticleDetail {
   articleId: string
   category: string

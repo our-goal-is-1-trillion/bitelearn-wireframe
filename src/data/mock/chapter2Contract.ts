@@ -1,4 +1,4 @@
-import { ChoiceQuestionSet } from "./choiceQuestion"
+import type { ChoiceQuestionSet } from "./choiceQuestion"
 
 export const MOCK_CHAPTER2_CONTRACT: ChoiceQuestionSet = {
   title: "[2단계: 계약] 도장 찍기 전, 멍멍이의 방어선",
