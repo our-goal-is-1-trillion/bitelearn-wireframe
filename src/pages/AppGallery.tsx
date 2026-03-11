@@ -105,13 +105,12 @@ export default function AppGallery({ onBack }: AppGalleryProps) {
   }
 
   const screens = [
+    { title: "Login", render: () => <Login onBack={noop} onSignup={noop} /> },
+    { title: "Signup", render: () => <Signup onLogin={noop} onSuccess={noop} /> },
     { title: "Onboarding Modal", render: () => <div className="h-full bg-slate-100"><OnboardingModal isOpen={true} onClose={noop} /></div> },
-    { title: "IA Home", render: () => <Home onNavigate={noop as any} /> },
     { title: "Dashboard (Guest)", render: () => <DashboardHome userType="guest" tabs={DASHBOARD_TABS} categories={DASHBOARD_CATEGORIES} recommendations={DASHBOARD_TODAY_RECOMMENDATIONS} articles={mockArticles} onMoveToChapter={noop} onMoveToLogin={noop} onMoveToArticle={noop} onTabClick={noop} /> },
     { title: "Dashboard (New)", render: () => <DashboardHome userType="new" tabs={DASHBOARD_TABS} categories={DASHBOARD_CATEGORIES} recommendations={DASHBOARD_TODAY_RECOMMENDATIONS} articles={mockArticles} onMoveToChapter={noop} onMoveToLogin={noop} onMoveToArticle={noop} onTabClick={noop} /> },
     { title: "Dashboard (Active)", render: () => <DashboardHome userType="active" tabs={DASHBOARD_TABS.map(t => ({...t, active: t.label === "홈"}))} categories={DASHBOARD_CATEGORIES} recommendations={DASHBOARD_TODAY_RECOMMENDATIONS} articles={mockArticles} onMoveToChapter={noop} onMoveToLogin={noop} onMoveToArticle={noop} onTabClick={noop} /> },
-    { title: "Login", render: () => <Login onBack={noop} onSignup={noop} /> },
-    { title: "Signup", render: () => <Signup onLogin={noop} onSuccess={noop} /> },
     { title: "Learning Home", render: () => <LearningHome onSelectCategory={noop} onTabClick={noop} /> },
     { title: "Chapter List", render: () => <ChapterList initialCategoryId="real-estate" onBack={noop} onSelectChapter={noop} onTabClick={noop} /> },
     { title: "Chapter Player", render: () => <ChapterPlayer onBack={noop} onComplete={noop} /> },
@@ -153,8 +152,6 @@ export default function AppGallery({ onBack }: AppGalleryProps) {
     { title: "Learning Note & Character", render: () => <LearningNote onTabClick={noop} /> },
     { title: "My Page", render: () => <Mypage onTabClick={noop} /> },
     { title: "Badge Modal (Gallery Item)", render: renderBadgeModal },
-    { title: "User Stories", render: () => <UserStories onBack={noop} /> },
-    { title: "Functional Spec", render: () => <FunctionalSpec onBack={noop} /> },
   ]
 
   return (
