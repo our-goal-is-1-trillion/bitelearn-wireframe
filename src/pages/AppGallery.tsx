@@ -1,6 +1,5 @@
 
 import { Button } from "@/components/ui/button"
-import Home from "@/components/features/home/Home"
 import DashboardHome from "@/components/features/dashboard/DashboardHome"
 import {
   DASHBOARD_CATEGORIES,
@@ -26,8 +25,6 @@ import ChapterList from "@/components/features/chapter/ChapterList"
 import LearningNote from "@/pages/LearningNote"
 import LearningHome from "@/components/features/chapter/LearningHome"
 import ChapterPlayer from "@/components/features/chapter/ChapterPlayer"
-import UserStories from "@/pages/UserStories"
-import FunctionalSpec from "@/pages/FunctionalSpec"
 import OnboardingModal from "@/components/features/onboarding/OnboardingModal"
 import { getBadgeGroups } from "@/components/features/badge/BadgeCollectionDialog"
 import { MOCK_USER } from "@/data/mock/user"
