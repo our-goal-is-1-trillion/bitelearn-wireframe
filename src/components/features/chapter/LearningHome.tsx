@@ -46,8 +46,12 @@ function CategoryCard({ cat, index, onSelect }: { cat: CategoryChapters; index: 
         className="flex h-auto w-full flex-col items-start gap-0 rounded-[22px] border-2 border-slate-100 bg-white p-0 shadow-sm transition-all hover:border-slate-200 hover:bg-white active:scale-[0.98] overflow-hidden"
       >
         <div className="flex w-full items-center gap-3 px-4 pt-4 pb-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-50 text-2xl shrink-0">
-            {cat.emoji}
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-50 text-2xl shrink-0 overflow-hidden p-1.5">
+            {cat.iconUrl ? (
+              <img src={cat.iconUrl} alt={cat.categoryName} className="h-full w-full object-contain" />
+            ) : (
+              cat.emoji
+            )}
           </div>
           <div className="flex-1 text-left min-w-0">
             <div className="flex items-center gap-2">

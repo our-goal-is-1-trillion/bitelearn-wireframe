@@ -58,6 +58,7 @@ export const MOCK_CATEGORY_CHAPTERS: CategoryChapters[] = [
     categoryId: "real-estate",
     categoryName: "부동산 · 주거",
     emoji: "🏠",
+    iconUrl: "/ai_character_assets/08_domain_icons/domain_icon_01_real_estate.png",
     tagline: "내 보증금, 내가 지킨다",
     totalChapters: 12,
     completedChapters: 5,

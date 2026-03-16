@@ -12,6 +12,7 @@ export type DashboardTab = {
 
 export type DashboardCategory = {
   emoji: string
+  iconUrl?: string
   name: string
   lessons: number
   percent: number
