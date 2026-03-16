@@ -1,8 +1,8 @@
 import { motion } from "framer-motion"
-import { ChevronRight, Star, GraduationCap, House, BookOpenCheck, FileText, UserRound, TrendingUp, PlayCircle } from "lucide-react"
+import { ChevronRight, Star, GraduationCap, House, BookOpenCheck, FileText, UserRound, MapPin, PlayCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import DashboardBottomNav from "@/components/layout/DashboardBottomNav"
-import { MOCK_CATEGORY_CHAPTERS } from "@/data/mock/chapter"
+import { MOCK_CATEGORY_CHAPTERS, flattenChapters } from "@/data/mock/chapter"
 import type { CategoryChapters } from "@/data/mock/chapter"
 import { MOCK_USER } from "@/data/mock/user"
 import BadgeCollectionDialog from "@/components/features/badge/BadgeCollectionDialog"
@@ -21,17 +21,19 @@ const LEARNING_TABS = [
 ]
 
 const getAssetBadge = (exp: number) => {
-  if (exp < 1000) return { icon: "🤎", label: "낡은 저금통", nextThreshold: 1000, nextIcon: "💳 든든한 통장" }
-  if (exp < 5000) return { icon: "💳", label: "든든한 통장", nextThreshold: 5000, nextIcon: "💎 프리미엄 금고" }
-  return { icon: "💎", label: "프리미엄 금고", nextThreshold: 5000, nextIcon: "" }
+  if (exp < 1000) return { icon: "🤎", label: "낡은 저금통", nextThreshold: 1000, nextIcon: "💳", nextLabel: "든든한 통장" }
+  if (exp < 5000) return { icon: "💳", label: "든든한 통장", nextThreshold: 5000, nextIcon: "💎", nextLabel: "프리미엄 금고" }
+  return { icon: "💎", label: "프리미엄 금고", nextThreshold: 5000, nextIcon: "", nextLabel: "" }
 }
 
 function CategoryCard({ cat, index, onSelect }: { cat: CategoryChapters; index: number; onSelect: () => void }) {
   const progress = Math.round((cat.completedChapters / cat.totalChapters) * 100)
   const isComplete = cat.completedChapters === cat.totalChapters
-  const inProgressChapter = cat.chapters.find((c) => c.status === "in_progress")
-  const nextChapter = cat.chapters.find((c) => c.status === "available") ?? inProgressChapter
+  const allChapters = flattenChapters(cat)
+  const inProgressChapter = allChapters.find((c) => c.status === "in_progress")
+  const nextChapter = allChapters.find((c) => c.status === "available") ?? inProgressChapter
   const grayscaleValue = isComplete ? 0 : Math.max(0, 100 - progress)
+  const remaining = cat.totalChapters - cat.completedChapters
 
   return (
     <motion.div
@@ -69,7 +71,9 @@ function CategoryCard({ cat, index, onSelect }: { cat: CategoryChapters; index: 
 
         <div className="w-full px-4 pb-3">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[11px] font-medium text-slate-400">{cat.completedChapters}/{cat.totalChapters} 챕터</span>
+            <span className="text-[11px] font-medium text-slate-400">
+              {isComplete ? `${cat.totalChapters}개 모두 완료` : `${cat.completedChapters}개 완료 · ${remaining}개 남음`}
+            </span>
             <span className="text-[11px] font-bold text-slate-700">{progress}%</span>
           </div>
           <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
@@ -84,9 +88,12 @@ function CategoryCard({ cat, index, onSelect }: { cat: CategoryChapters; index: 
 
         {nextChapter && !isComplete && (
           <div className="w-full border-t border-slate-50 bg-slate-50/60 px-4 py-2.5 flex items-center gap-2">
-            <TrendingUp size={12} className="text-slate-400 shrink-0" />
+            <MapPin size={11} className="text-orange-400 shrink-0" />
             <p className="text-[11px] font-bold text-slate-500 truncate">
-              {inProgressChapter ? "이어하기: " : "다음: "}{nextChapter.title}
+              {nextChapter.title}
+              {nextChapter.estimatedMinutes && (
+                <span className="font-normal text-slate-400"> · {nextChapter.estimatedMinutes}분</span>
+              )}
             </p>
           </div>
         )}
@@ -111,62 +118,79 @@ export default function LearningHome({ onSelectCategory, onTabClick }: LearningH
   let nextActionCategory = null
   let nextActionChapter = null
   for (const cat of MOCK_CATEGORY_CHAPTERS) {
-    const inProgress = cat.chapters.find(c => c.status === "in_progress")
+    const inProgress = flattenChapters(cat).find(c => c.status === "in_progress")
     if (inProgress) { nextActionCategory = cat; nextActionChapter = inProgress; break }
   }
   if (!nextActionChapter) {
     for (const cat of MOCK_CATEGORY_CHAPTERS) {
-      const available = cat.chapters.find(c => c.status === "available")
+      const available = flattenChapters(cat).find(c => c.status === "available")
       if (available) { nextActionCategory = cat; nextActionChapter = available; break }
     }
   }
+
+  const firstName = MOCK_USER.name.replace("코딩하는 ", "")
 
   return (
     <main className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-slate-50 text-slate-900">
       <div className="relative flex h-full flex-col border border-slate-200">
         <div className="hide-scrollbar flex-1 overflow-y-auto pb-28">
 
-          {/* Section 1: 멍멍이의 자산 현황 (Hero) */}
+          {/* Section 1: Byte 자산 & 뱃지 현황 (Hero) */}
           <section className="bg-white px-6 pt-10 pb-6 rounded-b-[32px] shadow-sm relative z-10 border-b border-slate-100">
-            <div className="flex items-center gap-3 mb-4">
+
+            {/* 타이틀 */}
+            <p className="text-[13px] font-semibold text-slate-400 mb-3">
+              {firstName}님의 Byte 자산
+            </p>
+
+            {/* Byte 수치 + 뱃지 정보 */}
+            <div className="flex items-center justify-between mb-4">
               <BadgeCollectionDialog>
-                <button className="flex items-center gap-2 active:scale-95 transition-transform">
-                  <span className="h-9 w-9 flex items-center justify-center rounded-full bg-slate-50 border border-slate-100 shadow-sm text-xl shrink-0">
+                <button className="flex items-center gap-2.5 active:scale-95 transition-transform">
+                  <span className="h-10 w-10 flex items-center justify-center rounded-full bg-amber-50 border border-amber-100 shadow-sm text-[22px] shrink-0">
                     {badge.icon}
                   </span>
                   <div className="text-left">
-                    <div className="flex items-center gap-1">
-                      <p className="text-[11px] font-semibold text-slate-400 leading-none">멍멍이 통장 · {badge.label}</p>
+                    <p className="text-[15px] font-bold text-slate-900 leading-tight">{badge.label}</p>
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <p className="text-[11px] font-medium text-slate-400 leading-none">뱃지 컬렉션 보기</p>
                       <ChevronRight size={10} className="text-slate-300" />
                     </div>
                   </div>
                 </button>
               </BadgeCollectionDialog>
-              <div className="flex-1 text-right">
-                <p className="text-[20px] font-extrabold text-slate-900 leading-none">
-                  {MOCK_USER.totalExp.toLocaleString()}<span className="text-orange-500 text-[14px] ml-1 font-bold">B</span>
+
+              <div className="text-right">
+                <p className="text-[24px] font-extrabold text-slate-900 leading-none">
+                  {MOCK_USER.totalExp.toLocaleString()}<span className="text-orange-500 text-[15px] ml-1 font-bold">B</span>
                 </p>
               </div>
             </div>
 
-            <div className="bg-slate-50 rounded-xl px-4 py-3 border border-slate-100">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-bold text-slate-500">
-                  {remainingExp > 0 ? `${badge.nextIcon} 장만까지` : "최고 등급 달성!"}
-                </span>
-                {remainingExp > 0 && (
+            {/* 다음 뱃지 진행 */}
+            {remainingExp > 0 ? (
+              <div className="bg-slate-50 rounded-xl px-4 py-3 border border-slate-100">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[11px] font-bold text-slate-500 flex items-center gap-1">
+                    <span>{badge.nextIcon}</span>
+                    <span>다음 뱃지 <span className="text-slate-700">{badge.nextLabel}</span>까지</span>
+                  </span>
                   <span className="text-[11px] font-bold text-orange-500">{remainingExp.toLocaleString()} B 남음</span>
-                )}
+                </div>
+                <div className="h-2 w-full bg-white rounded-full overflow-hidden border border-slate-200">
+                  <motion.div
+                    className="h-full bg-orange-400 rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${expProgress}%` }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
+                  />
+                </div>
               </div>
-              <div className="h-2 w-full bg-white rounded-full overflow-hidden border border-slate-200">
-                <motion.div
-                  className="h-full bg-orange-400 rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${expProgress}%` }}
-                  transition={{ duration: 1.5, ease: "easeOut" }}
-                />
+            ) : (
+              <div className="bg-amber-50 rounded-xl px-4 py-3 border border-amber-100 text-center">
+                <p className="text-[12px] font-bold text-amber-700">🏆 최고 뱃지 달성! 대단해요!</p>
               </div>
-            </div>
+            )}
           </section>
 
           {/* Section 2: Next Action */}
@@ -176,7 +200,9 @@ export default function LearningHome({ onSelectCategory, onTabClick }: LearningH
                 <div className="h-6 w-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
                   <PlayCircle size={14} className="fill-blue-600 text-white" />
                 </div>
-                <h2 className="text-sm font-bold text-slate-800 tracking-tight">지금 당장 이어하기</h2>
+                <h2 className="text-sm font-bold text-slate-800 tracking-tight">
+                  딱 {nextActionChapter.estimatedMinutes}분이면 돼요 🎯
+                </h2>
               </div>
               <Button
                 variant="outline"
@@ -187,8 +213,9 @@ export default function LearningHome({ onSelectCategory, onTabClick }: LearningH
                   <span className="inline-flex rounded-md bg-blue-50 px-2 py-1 text-[10px] font-bold text-blue-600">
                     {nextActionCategory.categoryName}
                   </span>
-                  <span className="text-[11px] font-bold text-slate-400">
-                    이어서 시작하기 <ChevronRight size={14} className="inline -mt-0.5" />
+                  <span className="text-[11px] font-bold text-slate-400 flex items-center gap-0.5">
+                    이어서 풀기 · {nextActionChapter.estimatedMinutes}분
+                    <ChevronRight size={13} className="inline -mt-0.5" />
                   </span>
                 </div>
                 <div>
@@ -203,9 +230,9 @@ export default function LearningHome({ onSelectCategory, onTabClick }: LearningH
             </section>
           )}
 
-          {/* Section 3: 지식 금고 현황 */}
+          {/* Section 3: 내 학습 지도 */}
           <section className="px-5 pt-6 pb-6">
-            <h2 className="text-sm font-bold text-slate-800 tracking-tight mb-4 px-1">지식 금고 현황</h2>
+            <h2 className="text-sm font-bold text-slate-800 tracking-tight mb-4 px-1">내 학습 지도 🗺️</h2>
             <div className="flex flex-col gap-3">
               {MOCK_CATEGORY_CHAPTERS.map((cat, i) => (
                 <CategoryCard
@@ -218,7 +245,7 @@ export default function LearningHome({ onSelectCategory, onTabClick }: LearningH
             </div>
             <div className="mt-8 mb-4 text-center">
               <p className="text-[11px] font-medium text-slate-400 leading-relaxed">
-                모든 금고를 컬러풀하게 채워보세요 🎨
+                매일 조금씩, 재정 독립에 가까워지고 있어요 💪
               </p>
             </div>
           </section>

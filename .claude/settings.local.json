@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(cd \"E:\\\\팀플3\\\\bitelearn-wireframe\" && npx tsc --noEmit 2>2)",
-      "Bash(cd \"E:\\\\팀플3\\\\bitelearn-wireframe\" && npx tsc --noEmit 2>&1)"
+      "Bash(cd \"E:\\\\팀플3\\\\bitelearn-wireframe\" && npx tsc --noEmit 2>&1)",
+      "Bash(cd \"E:\\\\팀플3\\\\bitelearn-wireframe\" && npx tsc --noEmit 2>&1 | head -40)",
+      "Bash(cd \"E:\\\\팀플3\\\\bitelearn-wireframe\" && npx tsc --noEmit 2>&1; echo \"EXIT:$?\")"
     ]
   }
 }
