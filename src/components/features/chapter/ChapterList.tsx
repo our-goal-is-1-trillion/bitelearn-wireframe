@@ -8,6 +8,7 @@ import type { Chapter, Subcategory } from "@/data/mock/chapter"
 
 type ChapterListProps = {
   initialCategoryId?: string
+  initialSubcategoryId?: string
   onBack: () => void
   onSelectChapter: (chapterId?: string) => void
   onTabClick?: (label: string) => void
@@ -233,8 +234,8 @@ function SubcategoryCard({
 }
 
 // ─── Main component ──────────────────────────────────────────
-export default function ChapterList({ initialCategoryId, onBack, onSelectChapter, onTabClick }: ChapterListProps) {
-  const [selectedSubId, setSelectedSubId] = useState<string | null>(null)
+export default function ChapterList({ initialCategoryId, initialSubcategoryId, onBack, onSelectChapter, onTabClick }: ChapterListProps) {
+  const [selectedSubId, setSelectedSubId] = useState<string | null>(initialSubcategoryId ?? null)
 
   const category = MOCK_CATEGORY_CHAPTERS.find((c) => c.categoryId === (initialCategoryId || "real-estate")) ?? MOCK_CATEGORY_CHAPTERS[0]
   const selectedSub = selectedSubId ? category.subcategories.find((s) => s.id === selectedSubId) ?? null : null

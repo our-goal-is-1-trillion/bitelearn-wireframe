@@ -31,6 +31,8 @@ import ChapterList from "@/components/features/chapter/ChapterList"
 import LearningNote from "@/pages/LearningNote"
 import LearningHome from "@/components/features/chapter/LearningHome"
 import ChapterPlayer from "@/components/features/chapter/ChapterPlayer"
+import ChapterDoneScreen from "@/components/features/chapter/ChapterDoneScreen"
+import TypingBubbleDemo from "@/pages/TypingBubbleDemo"
 import UserStories from "@/pages/UserStories"
 import FunctionalSpec from "@/pages/FunctionalSpec"
 import AppGallery from "@/pages/AppGallery"
@@ -70,6 +72,8 @@ export type Page =
   | "mistakeNote"
   | "learningHome"
   | "chapterPlayer"
+  | "chapterDone"
+  | "typingBubbleDemo"
   | "userStories"
   | "functionalSpec"
   | "gallery"
@@ -82,6 +86,7 @@ export default function App() {
   const [transitionStage, setTransitionStage] = useState<TransitionStage>("idle")
   const [quizResult, setQuizResult] = useState<QuizResultData | null>(null)
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("real-estate")
+  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     if (transitionStage === "out" && targetPage) {
@@ -262,8 +267,9 @@ export default function App() {
       case "learningHome":
         return (
           <LearningHome
-            onSelectCategory={(categoryId) => {
+            onSelectSubcategory={(categoryId, subcategoryId) => {
               setSelectedCategoryId(categoryId)
+              setSelectedSubcategoryId(subcategoryId)
               handleNavigate("chapterList")
             }}
             onTabClick={handleTabClick}
@@ -274,6 +280,7 @@ export default function App() {
         return (
           <ChapterList
             initialCategoryId={selectedCategoryId}
+            initialSubcategoryId={selectedSubcategoryId}
             onBack={() => handleNavigate("learningHome")}
             onSelectChapter={() => handleNavigate("chapterPlayer")}
             onTabClick={handleTabClick}
@@ -290,6 +297,19 @@ export default function App() {
             }}
           />
         )
+
+      case "chapterDone":
+        return (
+          <ChapterDoneScreen
+            correct={9}
+            total={11}
+            chapterTitle="[2단계: 계약] 부동산 계약, 이것만 알면 된다"
+            onFinish={() => handleNavigate("result")}
+          />
+        )
+
+      case "typingBubbleDemo":
+        return <TypingBubbleDemo />
 
       case "mistakeNote":
         return <LearningNote onTabClick={handleTabClick} />

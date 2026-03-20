@@ -35,16 +35,27 @@ const IA_STRUCTURE: IANode[] = [
     children: [
       { label: "학습 도메인 목록", page: "learningHome" },
       { label: "챕터 목록", page: "chapterList" },
-      { 
-        label: "🔥 [FLOW] 연속 학습 과정 (화면이 아닌 전체 흐름)", 
+      {
+        label: "🔥 [FLOW] 연속 학습 과정 (화면이 아닌 전체 흐름)",
         page: "chapterPlayer",
         children: [
           { label: "단어 학습", page: "wordLearning" },
           { label: "객관식 퀴즈", page: "choiceQuestion" },
           { label: "OX 퀴즈", page: "oxQuestion" },
           { label: "대화형 퀴즈", page: "conversationQuestion" },
+          { label: "타이핑 인디케이터 (...)", page: "typingBubbleDemo" },
           { label: "문서 객관식", page: "documentChoiceQuestion" },
           { label: "문서 오답 찾기", page: "documentClickQuestion" }
+        ]
+      },
+      { label: "챕터 완료 중간 화면", page: "chapterDone" },
+      {
+        label: "최종 결과",
+        children: [
+          { label: "최종 결과 – 일반", page: "result" },
+          { label: "최종 결과 – 만점", page: "resultPerfect" },
+          { label: "최종 결과 – 아슬아슬", page: "resultClose" },
+          { label: "최종 결과 – 실패", page: "resultFail" },
         ]
       }
     ]
